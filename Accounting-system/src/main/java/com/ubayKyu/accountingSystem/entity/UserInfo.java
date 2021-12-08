@@ -30,9 +30,9 @@ public class UserInfo {
 	public String email;
 	@Column(name = "UserLevel")
 	public Integer userLevel;
-	@Column(name = "CreateDate")
+	@Column(name = "CreateDate", nullable=false, unique=false, columnDefinition = "datetime")
 	public LocalDateTime createDate;
-	@Column(name = "EditDate", nullable= true)
+	@Column(name = "EditDate", nullable= true, unique=false, columnDefinition = "datetime")
 	public LocalDateTime editDate;
 	
 	public UserInfo() {
