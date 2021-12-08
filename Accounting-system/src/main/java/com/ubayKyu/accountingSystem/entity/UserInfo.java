@@ -51,10 +51,6 @@ public class UserInfo {
 		this.createDate = createDate;
 		this.editDate = editDate;
 	}
- 
-	public Collection<? extends GrantedAuthority> getAuthorities() { 
-	      return List.of(() -> "read"); 
-	   }
 	
 	public UUID getId() {
 		return id;
