@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>流水帳列表</title>
+<link rel="stylesheet" th:href="@{/bootstrap/css/styles.css}" />
+<script th:src="@{/bootstrap/js/scripts.js}"></script>
+<script th:src="@{/bootstrap/js/datatables-simple-demo.js}"></script>
+</head>
+<body class="sb-nav-fixed">
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+		<!-- 標頭-->
+		<a class="navbar-brand ps-3" href="Default.html">流水帳管理系統</a>
+		<!-- 搜尋方塊-->
+		<form
+			class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+			<div class="input-group">
+				<input class="form-control" type="text" placeholder="Search"
+					aria-label="Search" aria-describedby="btnNavbarSearch">
+				<button class="btn btn-primary" id="btnNavbarSearch" type="button">
+				</button>
+			</div>
+		</form>
+		<!-- Navbar-->
+		<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+			<a class="nav-link dropdown-toggle" id="navbarDropdown" href="Default.html"
+				role="button" data-bs-toggle="dropdown" aria-expanded="false"> <img
+				th:src="@{/Images/user.png}" width="32" height="32">
+			</a>
+		</ul>
+	</nav>
+	<div id="layoutSidenav">
+		<div id="layoutSidenav_nav">
+			<nav class="sb-sidenav accordion sb-sidenav-dark"
+				id="sidenavAccordion">
+				<div class="sb-sidenav-menu">
+					<div class="nav">
+						<div class="sb-sidenav-menu-heading">管理者後台</div>
+						<a class="nav-link" href="UserList.html">
+							<div class="sb-nav-link-icon"></div> 會員管理
+						</a>
+						<div class="sb-sidenav-menu-heading">後台管理</div>
+						<a class="nav-link" href="UserProfile.html">
+							<div class="sb-nav-link-icon"></div> 個人資訊
+						</a>
+						<div class="sb-sidenav-menu-heading">流水帳紀錄</div>
+						<a class="nav-link" href="AccountingList.html">
+							<div class="sb-nav-link-icon"></div> 流水帳管理
+						</a> <a class="nav-link" href="CategoryList.html">
+							<div class="sb-nav-link-icon"></div> 分類管理
+						</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div id="layoutSidenav_content">
+			<main>
+				<div class="container-fluid px-4">
+					<h1 class="mt-4">分類管理</h1>
+					<ol class="breadcrumb mb-4">
+						<li class="breadcrumb-item">流水帳紀錄</li>
+						<li class="breadcrumb-item active">分類管理</li>
+					</ol>
+					<div class="card mb-4">
+						<div class="card-body">
+							<input type="submit" value="Add"> <input type="submit"
+								value="Del">
+						</div>
+					</div>
+					<div class="card-body">
+						<div
+							class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+							<div class="dataTable-top"></div>
+							<div class="dataTable-container">
+								<table id="datatablesSimple" class="dataTable-table">
+									<thead>
+										<tr>
+											<th data-sortable="" style="width: 9.693%;"><a href="#"
+												class="dataTable-sorter"></a></th>
+											<th data-sortable="" style="width: 29.2499%;"><a
+												href="#" class="dataTable-sorter">建立日期</a></th>
+											<th data-sortable="" style="width: 15.4938%;"><a
+												href="#" class="dataTable-sorter">分類</a></th>
+											<th data-sortable="" style="width: 9.1225%;"><a href="#"
+												class="dataTable-sorter">流水帳數</a></th>
+											<th data-sortable="" style="width: 9.5841%;"><a href="#"
+												class="dataTable-sorter">Act</a></th>
+										</tr>
+									</thead>
+
+									<tbody>
+										<tr>
+											<td><input type="checkbox"></td>
+											<td>2011/04/25</td>
+											<td>Edinburgh</td>
+											<td>20</td>
+											<td><a th:href="@{'/edit/' + ${}}">Edit</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="dataTable-bottom">
+								<nav class="dataTable-pagination">
+									<ul class="dataTable-pagination-list">
+										<li class="active"><a href="#" data-page="1">1</a></li>
+										<li class=""><a href="#" data-page="2">2</a></li>
+										<li class=""><a href="#" data-page="3">3</a></li>
+										<li class=""><a href="#" data-page="4">4</a></li>
+										<li class=""><a href="#" data-page="5">5</a></li>
+										<li class=""><a href="#" data-page="6">6</a></li>
+										<li class="pager"><a href="#" data-page="2">›</a></li>
+									</ul>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+	</div>
+</body>
+</html>
