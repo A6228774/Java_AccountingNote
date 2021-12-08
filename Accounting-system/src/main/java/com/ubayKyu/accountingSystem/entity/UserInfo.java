@@ -19,16 +19,17 @@ import org.springframework.security.core.GrantedAuthority;
 public class UserInfo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID", updatable = false, nullable = false, columnDefinition = "uniqueidentifier")
 	public UUID id;
-	@Column(name = "Account")
+	@Column(name = "Account", nullable=false, unique=false, columnDefinition = "varchar(20)")
 	public String account;
-	@Column(name = "PWD")
+	@Column(name = "PWD", nullable=false, unique=false, columnDefinition = "varchar(50)")
 	public String pwd;
-	@Column(name = "Name")
+	@Column(name = "Name", nullable=false, unique=false, columnDefinition = "varchar(20)")
 	public String name;
-	@Column(name = "Email")
+	@Column(name = "Email", nullable=false, unique=false, columnDefinition = "nvarchar(100)")
 	public String email;
-	@Column(name = "UserLevel")
+	@Column(name = "UserLevel", nullable=false, unique=false)
 	public Integer userLevel;
 	@Column(name = "CreateDate", nullable=false, unique=false, columnDefinition = "datetime")
 	public LocalDateTime createDate;

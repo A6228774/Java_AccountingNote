@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests()
-				.antMatchers(HttpMethod.GET, "/Default.html", "/Login.html", "/AccountingList.html")
+				.antMatchers(HttpMethod.GET, "/Default.html", "/Login.html", "/UserProfile.html")
 				.permitAll() 
 	            .anyRequest().authenticated()
 	        .and()
@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/Login.html")
 				.usernameParameter("acc")
 				.passwordParameter("pwd")
-				.defaultSuccessUrl("/UserProfile.html")
+				.defaultSuccessUrl("/UserProfile.html?account=")
 			.and();
 		http
 				.logout().logoutSuccessUrl("/Default.html")

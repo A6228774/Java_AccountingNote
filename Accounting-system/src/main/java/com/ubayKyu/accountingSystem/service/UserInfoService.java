@@ -1,8 +1,5 @@
 package com.ubayKyu.accountingSystem.service;
 
-import java.util.List;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +19,12 @@ public class UserInfoService {
 	//	return repository.findAll();
 	//}
     //
-	//// test
 	//public UserInfo saveUserInfo(UserInfo UserInfo) {
 	//	return repository.save(UserInfo);
 	//}
     
 	public UserInfo getUserInfoByAccount(String acc) {
-		return repository.findByAccount(acc);
+		return repository.findByAccountSQL(acc);
 	}
 
 	//public String deleteUserInfo(UUID id) {

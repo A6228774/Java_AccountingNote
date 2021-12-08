@@ -15,6 +15,8 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, UUID> {
 	@Query(value = "SELECT COUNT(*) as usercnt FROM UserInfo", nativeQuery = true)
 	Long Usercnt();
 
-	@Query(value = "SELECT * from UserInfo WHERE Account='admin'", nativeQuery = true)
+	@Query(value = "SELECT * from UserInfo WHERE Account=?1", nativeQuery = true)
+	UserInfo findByAccountSQL(String acc);
+	
 	UserInfo findByAccount(String acc);
 }
