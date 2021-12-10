@@ -25,6 +25,8 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
             HttpServletRequest request,
             HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
+    	
+    	//加入Session
         HttpSession session = request.getSession();
         User authuser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         session.setAttribute("currentUser", authuser);

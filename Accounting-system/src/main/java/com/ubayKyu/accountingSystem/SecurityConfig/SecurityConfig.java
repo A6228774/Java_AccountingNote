@@ -18,15 +18,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+
+import com.ubayKyu.accountingSystem.Handler.AuthFailureHandler;
 import com.ubayKyu.accountingSystem.Handler.AuthSuccessHandler;
-import com.ubayKyu.accountingSystem.entity.UserInfo;
-import com.ubayKyu.accountingSystem.repository.UserInfoRepository;
 import com.ubayKyu.accountingSystem.service.AuthService;
 import com.ubayKyu.accountingSystem.service.UserInfoService;
 
@@ -37,6 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		private UserInfoService userinfoSer;
 	@Autowired
 	    private AuthSuccessHandler authSuccessHandler;
+	@Autowired
+    private AuthFailureHandler authFailureHandler;
 	@Bean
     public UserDetailsService userDetailsService() {
         return new AuthService();
@@ -74,6 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/Login.html")
 				.usernameParameter("acc")
 				.passwordParameter("pwd")
+				.failureHandler(authFailureHandler)
 				.successHandler(authSuccessHandler)
 			.and();
 		http
