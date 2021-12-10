@@ -19,4 +19,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, UUID> {
 	UserInfo findByAccountSQL(String acc);
 	
 	UserInfo findByAccount(String acc);
+	
+	@Query(value = "SELECT * from UserInfo WHERE Account=?1 AND PWD=?2", nativeQuery = true)
+	UserInfo findAllByaccountAndPWDSQL(String acc, String pwd);
 }

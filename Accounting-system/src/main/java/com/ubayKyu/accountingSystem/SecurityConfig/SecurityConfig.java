@@ -1,6 +1,12 @@
 package com.ubayKyu.accountingSystem.SecurityConfig;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,17 +18,25 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import com.ubayKyu.accountingSystem.Handler.AuthSuccessHandler;
+import com.ubayKyu.accountingSystem.entity.UserInfo;
+import com.ubayKyu.accountingSystem.repository.UserInfoRepository;
 import com.ubayKyu.accountingSystem.service.AuthService;
+import com.ubayKyu.accountingSystem.service.UserInfoService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
-	    private DataSource dataSource;
+		private UserInfoService userinfoSer;
+	@Autowired
+	    private AuthSuccessHandler authSuccessHandler;
 	@Bean
     public UserDetailsService userDetailsService() {
         return new AuthService();
@@ -39,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          
         return authProvider;
     }
-	
+
 	@Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
@@ -60,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/Login.html")
 				.usernameParameter("acc")
 				.passwordParameter("pwd")
-				.defaultSuccessUrl("/UserProfile.html?account=")
+				.successHandler(authSuccessHandler)
 			.and();
 		http
 				.logout().logoutSuccessUrl("/Default.html")

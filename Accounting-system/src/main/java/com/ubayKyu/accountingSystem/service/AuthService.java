@@ -28,13 +28,22 @@ public class AuthService implements UserDetailsService {
 	
 	 @Override
 	    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-	        UserInfo info = userinfoRepo.findByAccount(username);
+	        UserInfo info = userinfoRepo.findByAccountSQL(username);
 	        if (info == null) {
 	            throw new UsernameNotFoundException("User not found");
 	        }
 	        String password = info.getPwd(); 
 	        String encodepwd = new BCryptPasswordEncoder().encode(password);
-	        Collection<GrantedAuthority> authList = getAuthorities(); 
+	        Collection<GrantedAuthority> authList = getAuthorities();
+	        
+	        if(info.getUserLevel() == 0)
+	        {
+	        	String level = "ADMIN";
+	        }
+	        else
+	        {
+	        	String level = "NORMAL";
+	        }
 	        
 	        return new User(username, encodepwd, true, true, true, true, authList);
 	    }

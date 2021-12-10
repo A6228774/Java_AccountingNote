@@ -26,6 +26,10 @@ public class UserInfoService {
 	public UserInfo getUserInfoByAccount(String acc) {
 		return repository.findByAccountSQL(acc);
 	}
+	
+	public UserInfo getLoginUser(String acc, String pwd) {
+		return repository.findAllByaccountAndPWDSQL(acc, pwd);
+	}
 
 	//public String deleteUserInfo(UUID id) {
 	//	repository.deleteById(id);
