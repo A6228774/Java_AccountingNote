@@ -13,7 +13,8 @@ import javax.persistence.Id;
 public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer CID;
+	@Column(name = "CategoryID")
+	public Integer cid;
 	@Column(name = "UserID")
 	public UUID userid;
 	@Column(name = "Title")
@@ -24,10 +25,10 @@ public class Category {
 	public LocalDateTime createDate;
 	
 	public Integer getCID() {
-		return CID;
+		return cid;
 	}
 	public void setCID(Integer cID) {
-		CID = cID;
+		cid = cID;
 	}
 	public UUID getUserid() {
 		return userid;
