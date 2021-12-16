@@ -34,11 +34,8 @@
 			<nav class="sb-sidenav accordion sb-sidenav-dark"
 				id="sidenavAccordion">
 				<div class="sb-sidenav-menu">
-					<div class="nav">
-						<div class="sb-sidenav-menu-heading">管理者後台</div>
-						<a class="nav-link" href="UserList.html">
-							<div class="sb-nav-link-icon"></div> 會員管理
-						</a>
+					<div class="nav">		
+						<div th:if="${level}" th:include="/layouts/AdminMenu"></div>
 						<div class="sb-sidenav-menu-heading">後台管理</div>
 						<a class="nav-link" href="UserProfile.html">
 							<div class="sb-nav-link-icon"></div> 個人資訊
