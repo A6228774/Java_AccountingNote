@@ -23,9 +23,11 @@
 		</form>
 		<!-- Navbar-->
 		<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-			<a class="nav-link dropdown-toggle" id="navbarDropdown" href="Default.html"
-				role="button" data-bs-toggle="dropdown" aria-expanded="false"> <img
-				th:src="@{/Images/user.png}" width="32" height="32">
+			<a class="nav-link dropdown-toggle" id="navbarDropdown"
+				href="/logout" role="button" data-bs-toggle="dropdown"
+				aria-expanded="false"> 
+				<span th:if="${level}" th:insert="/layouts/AdminIcon"></span>
+				<span th:unless="${level}" th:insert="/layouts/Icon"></span>
 			</a>
 		</ul>
 	</nav>
@@ -34,7 +36,7 @@
 			<nav class="sb-sidenav accordion sb-sidenav-dark"
 				id="sidenavAccordion">
 				<div class="sb-sidenav-menu">
-					<div class="nav">		
+					<div class="nav">
 						<div th:if="${level}" th:include="/layouts/AdminMenu"></div>
 						<div class="sb-sidenav-menu-heading">後台管理</div>
 						<a class="nav-link" href="UserProfile.html">
@@ -68,11 +70,13 @@
 									</tr>
 									<tr>
 										<td>姓名</td>
-										<td><input type="text" disabled required th:value="${Name}"></td>
+										<td><input type="text" disabled required
+											th:value="${Name}"></td>
 									</tr>
 									<tr>
 										<td>Email</td>
-										<td><input type="email" disabled required th:value="${Email}"></td>
+										<td><input type="email" disabled required
+											th:value="${Email}"></td>
 									</tr>
 								</table>
 								<input type="submit" value="修改">
