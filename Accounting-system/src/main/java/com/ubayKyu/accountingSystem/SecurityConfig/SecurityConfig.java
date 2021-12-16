@@ -1,13 +1,5 @@
 package com.ubayKyu.accountingSystem.SecurityConfig;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,19 +13,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
 import com.ubayKyu.accountingSystem.Handler.AuthFailureHandler;
 import com.ubayKyu.accountingSystem.Handler.AuthSuccessHandler;
 import com.ubayKyu.accountingSystem.service.AuthService;
-import com.ubayKyu.accountingSystem.service.UserInfoService;
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
-		private UserInfoService userinfoSer;
-	@Autowired
-	    private AuthSuccessHandler authSuccessHandler;
+	public AuthSuccessHandler authSuccessHandler;
 	@Autowired
     private AuthFailureHandler authFailureHandler;
 	@Bean
@@ -64,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests()
-				.antMatchers(HttpMethod.GET, "/Default.html", "/Login.html", "/UserProfile.html")
+				.antMatchers(HttpMethod.GET, "/Default.html", "/Login.html")
 				.permitAll() 
 	            .anyRequest().authenticated()
 	        .and()
