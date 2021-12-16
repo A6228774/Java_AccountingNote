@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.ubayKyu.accountingSystem.entity.UserInfo;
 import com.ubayKyu.accountingSystem.service.AccountingNoteService;
 import com.ubayKyu.accountingSystem.service.UserInfoService;
 
@@ -30,7 +31,16 @@ public class HomeController {
 	}
 
 	@GetMapping("/Default.html")
-	public String MainPage(Model model) {
+	public String MainPage(Model model, HttpSession session) {
+		
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
+		if (currentUser != null) {
+			model.addAttribute("redirect", "/UserProfile.html?account=" + currentUser.getAccount());
+		}
+		else
+		{
+			model.addAttribute("redirect", "/Login.html");
+		}
 		model.addAttribute("first", accountingnoteSer.firstrecord().toString());
 		model.addAttribute("last", accountingnoteSer.lastrecord().toString());
 		model.addAttribute("notecnt", accountingnoteSer.notecnt());
