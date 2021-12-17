@@ -67,7 +67,9 @@
 							<form method="post" th:action="@{/CategoryDetail.html}">
 								<input type="submit" value="Add">
 							</form>
-							<input type="submit" value="Del">
+							<form method="post"
+								th:action="@{/CategoryList.html/delete_category}">
+								<input type="submit" value="Del" onclick="DelCategory()">
 						</div>
 					</div>
 					<div class="card-body">
@@ -95,12 +97,16 @@
 										<tr th:if="${category.empty}">
 											<td colspan="5">沒有任何分類</td>
 										</tr>
-										<tr th:each="c : ${category}">
-											<td><span th:text="${c.cid}"></span></td>
+										<tr th:each="c, row : ${category}">
+											<td><input type="checkbox" class="cbx"
+												th:value="${c.cid}" name="categoryID"></td>
 											<td><span th:text="${c.createDate}"></span></td>
 											<td><span th:text="${c.title}"></span></td>
-											<td><span></span></td>
-											<td><a th:href="@{'/CategoryDetail.html?cid=' + ${c.cid}}">Edit</td>
+											<td><span th:text="${count[row.index]}"></span><input
+												type="hidden" th:value="${count[row.index]}"
+												name="account_count"></td>
+											<td><a
+												th:href="@{'/CategoryDetail.html?cid=' + ${c.cid}}">Edit</td>
 										</tr>
 									</tbody>
 								</table>
@@ -108,21 +114,32 @@
 							<div class="dataTable-bottom">
 								<nav class="dataTable-pagination">
 									<ul class="dataTable-pagination-list">
-										<li class="active"><a href="#" data-page="1">1</a></li>
-										<li class=""><a href="#" data-page="2">2</a></li>
-										<li class=""><a href="#" data-page="3">3</a></li>
-										<li class=""><a href="#" data-page="4">4</a></li>
-										<li class=""><a href="#" data-page="5">5</a></li>
-										<li class=""><a href="#" data-page="6">6</a></li>
-										<li class="pager"><a href="#" data-page="2">›</a></li>
+										<li th:each="p : ${total}"><a
+											th:href="@{'/CategoryList.html?uid=' + ${userid} + '&page=' + ${p}}"
+											data-page="${p}" th:text="${p}"></a></li>
 									</ul>
 								</nav>
 							</div>
 						</div>
 					</div>
+					</form>
 				</div>
 			</main>
 		</div>
 	</div>
+	<script>
+		function DelCategory() {
+			var table = document.getElementById("datatablesSimple");
+
+			for (var i = 1; i < table.rows.length; i++) {
+				var row = table.rows[i];
+				var cbx = row.cells[0].getElementsByClassName('cbx');
+				if ('checkbox' == cbx.type && true == cbx.checked) {
+					table.deleteRow(i);
+				}
+			}
+			confirm('確定要刪除已選分類?');
+		}
+	</script>
 </body>
 </html>
