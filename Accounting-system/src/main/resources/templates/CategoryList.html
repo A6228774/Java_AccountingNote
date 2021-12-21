@@ -25,9 +25,11 @@
 		<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
 			<a class="nav-link dropdown-toggle" id="navbarDropdown"
 				href="Default.html" role="button" data-bs-toggle="dropdown"
-				aria-expanded="false"> <img th:src="@{/Images/user.png}"
-				width="32" height="32">
-			</a>
+				aria-expanded="false">
+				<span th:if="${level}"
+				th:insert="/layouts/AdminIcon"></span>
+				<span th:unless="${level}"
+				th:insert="/layouts/Icon"></span> </a>
 		</ul>
 	</nav>
 	<div id="layoutSidenav">
@@ -36,10 +38,7 @@
 				id="sidenavAccordion">
 				<div class="sb-sidenav-menu">
 					<div class="nav">
-						<div class="sb-sidenav-menu-heading">管理者後台</div>
-						<a class="nav-link" href="UserList.html">
-							<div class="sb-nav-link-icon"></div> 會員管理
-						</a>
+						<div th:if="${level}" th:include="/layouts/AdminMenu"></div>
 						<div class="sb-sidenav-menu-heading">後台管理</div>
 						<a class="nav-link" href="UserProfile.html">
 							<div class="sb-nav-link-icon"></div> 個人資訊
@@ -64,7 +63,7 @@
 					</ol>
 					<div class="card mb-4">
 						<div class="card-body">
-							<form method="post" th:action="@{/CategoryDetail.html}">
+							<form method="post" th:action="@{/CategoryDetail.html/new}">
 								<input type="submit" value="Add">
 							</form>
 							<form method="post"
