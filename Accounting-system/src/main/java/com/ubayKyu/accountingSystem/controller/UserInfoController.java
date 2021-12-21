@@ -30,6 +30,7 @@ public class UserInfoController {
 		} else {
 			UserInfo info = repo.findByAccountSQL(acctxt);
 
+			model.addAttribute("uidtxt", info.getId());
 			model.addAttribute("ACC", info.account.toString());
 			model.addAttribute("Name", info.name.toString());
 			model.addAttribute("Email", info.getEmail().toString());
