@@ -39,7 +39,7 @@
 					<div class="nav">
 						<div th:if="${level}" th:include="/layouts/AdminMenu"></div>
 						<div class="sb-sidenav-menu-heading">後台管理</div>
-						<a class="nav-link" href="UserProfile.html">
+						<a class="nav-link" href="@{'UserProfile.html?account=' + ${ACC}}">
 							<div class="sb-nav-link-icon"></div> 個人資訊
 						</a>
 						<div class="sb-sidenav-menu-heading">流水帳紀錄</div>

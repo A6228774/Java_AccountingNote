@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.ubayKyu.accountingSystem.entity.UserInfo;
 import com.ubayKyu.accountingSystem.repository.UserInfoRepository;
@@ -26,6 +25,7 @@ public class UserInfoController {
 			HttpSession session, HttpServletResponse response) throws IOException {
 		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
 		if (currentUser == null) {
+			session.removeAttribute("loginUser");
 			response.sendRedirect("/Default.html");
 		} else {
 			UserInfo info = repo.findByAccountSQL(acctxt);
