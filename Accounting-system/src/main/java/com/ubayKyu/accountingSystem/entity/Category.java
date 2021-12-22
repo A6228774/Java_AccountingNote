@@ -14,7 +14,7 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CategoryID")
-	public Integer cid;
+	public Integer categoryid;
 	@Column(name = "UserID")
 	public UUID userid;
 	@Column(name = "Title")
@@ -23,34 +23,43 @@ public class Category {
 	public String remarks;
 	@Column(name = "CreateDate")
 	public LocalDateTime createDate;
-	
-	public Integer getCID() {
-		return cid;
+
+	public Integer getCategoryid() {
+		return categoryid;
 	}
-	public void setCID(Integer cID) {
-		cid = cID;
+
+	public void setCategoryid(Integer categoryid) {
+		this.categoryid = categoryid;
 	}
+
 	public UUID getUserid() {
 		return userid;
 	}
+
 	public void setUserid(UUID userid) {
 		this.userid = userid;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getRemarks() {
 		return remarks;
 	}
+
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+
 	public LocalDateTime getCreateDate() {
 		return createDate;
 	}
+
 	public void setCreateDate(LocalDateTime createDate) {
 		this.createDate = createDate;
 	}

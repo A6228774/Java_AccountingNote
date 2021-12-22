@@ -47,11 +47,25 @@ public class CategoryService {
 		return repository.lastCategory();
 	}
 
-	public void createCategoryByCID(Integer newcid, String uidtxt, String titletxt, String remarkstxt, LocalDateTime ct)
+	public void createCategoryByCID(String uidtxt, String titletxt, String remarkstxt, LocalDateTime ct)
 			throws Exception {
 		if (titletxt.length() > 20) {
 			throw new Exception("標題字串長度大於20");
 		}
-		repository.CreateCategoryByCID(newcid, uidtxt, titletxt, remarkstxt, ct);
+		repository.CreateCategoryByCID(uidtxt, titletxt, remarkstxt, ct);
+	}
+
+	public void saveCategory(Integer newcid, String uidtxt, String titletxt, String remarkstxt, LocalDateTime ct) {
+		Category category = new Category();
+		category.setCategoryid(newcid);
+
+		UUID uid = UUID.fromString(uidtxt);
+		category.setUserid(uid);
+
+		category.setTitle(titletxt);
+		category.setRemarks(remarkstxt);
+		category.setCreateDate(ct);
+
+		repository.save(category);
 	}
 }

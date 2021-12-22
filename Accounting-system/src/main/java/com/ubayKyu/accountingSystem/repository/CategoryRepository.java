@@ -32,9 +32,9 @@ public interface CategoryRepository extends JpaRepository<Category, Integer>,Jpa
 	@Query(value = "UPDATE Category SET Title=?1, Remarks=?2 WHERE CategoryID=?3", nativeQuery = true)
 	Category UpdateCategoryByCID(String titletxt, String remarkstxt, Integer cid);
 	
-	@Query(value = "SELECT Top 1 CategoryID FROM Category ORDER BY DESC", nativeQuery = true)
+	@Query(value = "SELECT Top 1 CategoryID FROM Category ORDER BY CategoryID DESC", nativeQuery = true)
 	Integer lastCategory();
 	
-	@Query(value = "INSERT INTO Category (CategoryID, UserID, Title, Remarks, CreateDate) VALUES(?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
-	Category CreateCategoryByCID(Integer newcid, String uidtxt, String titletxt, String remarkstxt, LocalDateTime ct);
+	@Query(value = "INSERT INTO Category (UserID, Title, Remarks, CreateDate) VALUES (?1, ?2, ?3, ?4)", nativeQuery = true)
+	Category CreateCategoryByCID(String userid, String titletxt, String remarkstxt, LocalDateTime ct);
 }
