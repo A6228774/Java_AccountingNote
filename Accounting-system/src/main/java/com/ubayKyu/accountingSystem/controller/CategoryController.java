@@ -1,11 +1,9 @@
 package com.ubayKyu.accountingSystem.controller;
 
 import java.io.IOException;
-import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,17 +16,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ubayKyu.accountingSystem.Method.GUIDtoUUIDMethod;
 import com.ubayKyu.accountingSystem.entity.Category;
 import com.ubayKyu.accountingSystem.entity.UserInfo;
 import com.ubayKyu.accountingSystem.service.CategoryService;
-import com.ubayKyu.accountingSystem.service.UserInfoService;
 
 @Controller
 public class CategoryController {
@@ -40,6 +33,7 @@ public class CategoryController {
 			@RequestParam(value = "page", required = false) String pagetxt, Model model, HttpServletResponse response,
 			HttpSession session) throws IOException {
 		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
+
 		// 判斷登入
 		if (currentUser == null) {
 			session.removeAttribute("loginUser");

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ubayKyu.accountingSystem.Method.GUIDtoUUIDMethod;
 import com.ubayKyu.accountingSystem.entity.UserInfo;
 import com.ubayKyu.accountingSystem.repository.UserInfoRepository;
 
@@ -19,6 +20,8 @@ import com.ubayKyu.accountingSystem.repository.UserInfoRepository;
 public class UserInfoController {
 	@Autowired
 	private UserInfoRepository repo;
+	@Autowired
+	private GUIDtoUUIDMethod converter;
 
 	@GetMapping("/UserProfile.html")
 	public String UserProfileInfo(@RequestParam(value = "account", required = true) String acctxt, Model model,
@@ -29,11 +32,13 @@ public class UserInfoController {
 			response.sendRedirect("/Default.html");
 		} else {
 			UserInfo info = repo.findByAccountSQL(acctxt);
-
+			String uuidtxt = info.getId();
+			
 			model.addAttribute("uidtxt", info.getId());
 			model.addAttribute("ACC", info.account.toString());
 			model.addAttribute("Name", info.name.toString());
 			model.addAttribute("Email", info.getEmail().toString());
+			model.addAttribute("test", uuidtxt);
 		}
 
 		boolean IsAdmin;

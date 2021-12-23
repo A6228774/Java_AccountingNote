@@ -20,7 +20,7 @@ public class UserInfo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", updatable = false, nullable = false, columnDefinition = "uniqueidentifier")
-	public UUID id;
+	public String id;
 	@Column(name = "Account", nullable=false, unique=false, columnDefinition = "varchar(20)")
 	public String account;
 	@Column(name = "PWD", nullable=false, unique=false, columnDefinition = "varchar(50)")
@@ -40,7 +40,7 @@ public class UserInfo {
 		
 	}
 
-	public UserInfo(UUID id, String account, String pwd, String name, String email, Integer userLevel,
+	public UserInfo(String id, String account, String pwd, String name, String email, Integer userLevel,
 			LocalDateTime createDate, LocalDateTime editDate) {
 		super();
 		this.id = id;
@@ -53,11 +53,11 @@ public class UserInfo {
 		this.editDate = editDate;
 	}
 	
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
