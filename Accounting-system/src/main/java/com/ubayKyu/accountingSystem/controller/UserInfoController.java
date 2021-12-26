@@ -38,7 +38,7 @@ public class UserInfoController {
 			model.addAttribute("ACC", info.account.toString());
 			model.addAttribute("Name", info.name.toString());
 			model.addAttribute("Email", info.getEmail().toString());
-			model.addAttribute("test", uuidtxt);
+			model.addAttribute("userid", uuidtxt);
 		}
 
 		boolean IsAdmin;

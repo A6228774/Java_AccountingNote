@@ -17,18 +17,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ubayKyu.accountingSystem.entity.Category;
 import com.ubayKyu.accountingSystem.entity.UserInfo;
+import com.ubayKyu.accountingSystem.service.AccountingNoteService;
 import com.ubayKyu.accountingSystem.service.CategoryService;
 
 @Controller
 public class CategoryController {
 	@Autowired
 	private CategoryService service;
+	@Autowired
+	private AccountingNoteService ACCservice;
 
-	@GetMapping("/CategoryList.html")
+	@RequestMapping("/CategoryList.html")
 	public String CategoryList(@RequestParam(value = "uid", required = false) String useridtxt,
 			@RequestParam(value = "page", required = false) String pagetxt, Model model, HttpServletResponse response,
 			HttpSession session) throws IOException {
@@ -95,21 +100,34 @@ public class CategoryController {
 		}
 	}
 
-	@PostMapping("/CategoryList.html/delete_category")
-	// 刪除分類
-	public String delete(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
-		if (request.getParameterValues("categoryID") != null) {
-			for (String indextxt : request.getParameterValues("categoryID")) {
-				Integer cnt = Integer.parseInt(request.getParameter("account_count"));
+	@PostMapping("/CategoryList.html")
+	public String delete(HttpServletRequest request, HttpServletResponse response, RedirectAttributes rediectatt,
+			HttpSession session) throws IOException {
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
+		String useridtxt = currentUser.getId().toString();
+
+		// 刪除分類
+		String[] delList = request.getParameterValues("categoryID");
+		if (delList != null) {
+			for (String indextxt : delList) {
+				Integer cid = Integer.parseInt(indextxt);
+				Integer cnt = ACCservice.checkaccountCNT(cid);
+				String catName = service.getCategoryByCID(cid).title;
+
 				if (cnt == 0) {
-					Integer cid = Integer.parseInt(indextxt);
-					service.DeleteCategoryByCID(cid);
+					try {
+						service.DeleteCategoryByCID(cid);
+					} catch (Exception ex) {
+						rediectatt.addFlashAttribute("errormsg", ex.getMessage());
+					}
 				} else {
-					model.addAttribute("errormsg", "勾選分類內仍有流水帳故無法刪除");
+					rediectatt.addFlashAttribute("errormsg", "勾選分類：" + catName + "內仍有流水帳故無法刪除");
 				}
 			}
+		} else {
+			rediectatt.addFlashAttribute("errormsg", "未勾選分類");
 		}
-		return "redirect:/CategoryList.html";
+		return "redirect:/CategoryList.html?uid=" + useridtxt;
 	}
 
 	// 分類詳細頁顯示
@@ -154,13 +172,12 @@ public class CategoryController {
 			model.addAttribute("newCat", true);
 			return "/CategoryDetail.html";
 		}
-
 	}
 
 	@PostMapping("/CategoryDetail.html")
 	public String EditCategoryDetail(@RequestParam(value = "cid", required = false) String cidtxt,
 			@ModelAttribute("title") String titletxt, @ModelAttribute("remarks") String remarkstxt, Model model,
-			HttpSession session) throws Exception {
+			RedirectAttributes rediatt, HttpSession session) throws Exception {
 		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
 		String uidtxt = currentUser.getId().toString();
 
@@ -172,7 +189,7 @@ public class CategoryController {
 			try {
 				service.updateCategoryByCID(titletxt, remarkstxt, cid);
 			} catch (Exception ex) {
-				model.addAttribute("errormsg", ex.getMessage());
+				rediatt.addFlashAttribute("errormsg", ex.getMessage());
 			}
 			return "redirect:CategoryDetail.html?cid=" + cidtxt;
 		} else {
@@ -225,7 +242,7 @@ public class CategoryController {
 			service.createCategoryByCID(uidtxt, titletxt, remarkstxt, ct);
 			response.sendRedirect("/CategoryList.html?uid=" + uidtxt);
 		} catch (Exception ex) {
-			model.addAttribute("errormsg", ex.getMessage());
+			model.addAttribute("errormsg", ex.getLocalizedMessage());
 		}
 		return "redirect:/CategoryList.html?uid=" + uidtxt;
 	}

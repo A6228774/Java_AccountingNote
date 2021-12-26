@@ -28,12 +28,17 @@ public class CategoryService {
 		return repository.AccountingInCategory(cid);
 	}
 
-	public Category DeleteCategoryByCID(Integer cid) {
-		return repository.DeleteCategoryByCID(cid);
+	public void DeleteCategoryByCID(Integer cid) {
+		repository.deleteById(cid);
+		return;
 	}
 
 	public Category getCategoryByCID(Integer cid) {
 		return repository.findCategoryByCID(cid);
+	}
+	
+	public List<Category> getCategoryDLLByUserID(String userid) {
+		return repository.findCategoryDDLByUserID(userid);
 	}
 
 	public void updateCategoryByCID(String titletxt, String remarkstxt, Integer cid) throws Exception {
@@ -53,19 +58,5 @@ public class CategoryService {
 			throw new Exception("標題字串長度大於20");
 		}
 		repository.CreateCategoryByCID(uidtxt, titletxt, remarkstxt, ct);
-	}
-
-	public void saveCategory(Integer newcid, String uidtxt, String titletxt, String remarkstxt, LocalDateTime ct) {
-		Category category = new Category();
-		category.setCategoryid(newcid);
-
-		UUID uid = UUID.fromString(uidtxt);
-		category.setUserid(uid);
-
-		category.setTitle(titletxt);
-		category.setRemarks(remarkstxt);
-		category.setCreateDate(ct);
-
-		repository.save(category);
 	}
 }

@@ -13,15 +13,15 @@ import javax.persistence.Id;
 public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CategoryID")
+	@Column(name = "CategoryID", updatable = false, nullable = false, columnDefinition = "int")
 	public Integer categoryid;
-	@Column(name = "UserID")
-	public UUID userid;
-	@Column(name = "Title")
+	@Column(name = "UserID", nullable = false, columnDefinition = "uniqueidentifier")
+	public String userid;
+	@Column(name = "Title", nullable=false, unique=false, columnDefinition = "nvarchar(20)")
 	public String title;
-	@Column(name = "Remarks")
+	@Column(name = "Remarks", nullable=true, unique=false, columnDefinition = "nvarchar(500)")
 	public String remarks;
-	@Column(name = "CreateDate")
+	@Column(name = "CreateDate", nullable=false, unique=false, columnDefinition = "datetime")
 	public LocalDateTime createDate;
 
 	public Integer getCategoryid() {
@@ -32,11 +32,11 @@ public class Category {
 		this.categoryid = categoryid;
 	}
 
-	public UUID getUserid() {
+	public String getUserid() {
 		return userid;
 	}
 
-	public void setUserid(UUID userid) {
+	public void setUserid(String userid) {
 		this.userid = userid;
 	}
 
