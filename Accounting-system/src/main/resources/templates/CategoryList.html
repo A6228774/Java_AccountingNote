@@ -42,7 +42,8 @@
 						<a class="nav-link"
 							th:href="@{'UserProfile.html?account=' + ${acctxt}}"> 個人資訊 </a>
 						<div class="sb-sidenav-menu-heading">流水帳紀錄</div>
-						<a class="nav-link" href="AccountingList.html"> 流水帳管理 </a> <a
+						<a class="nav-link"
+							th:href="@{'AccountingList.html?uid=' + ${userid}}"> 流水帳管理 </a> <a
 							class="nav-link"
 							th:href="@{'CategoryList.html?uid=' + ${userid}}"> 分類管理 </a>
 					</div>
@@ -57,83 +58,68 @@
 						<li class="breadcrumb-item">流水帳紀錄</li>
 						<li class="breadcrumb-item active">分類管理</li>
 					</ol>
-					<div class="card mb-4">
+					<form method="post"
+						th:action="@{/CategoryList.html}">
+						<div class="card mb-4">
+							<div class="card-body">
+								<input type="button" value="Add" onclick="location.href='/CategoryDetail.html/new'">&nbsp;
+								<input type="submit" value="Del" onclick="return confirm('確定要刪除已選分類?')"><br>
+								<span th:text="${errormsg}" style="color: red"></span>
+							</div>
+						</div>
 						<div class="card-body">
-							<a th:href="@{/CategoryDetail.html/new}"> <input
-								type="button" value="Add">
-							</a>
-							<form method="post"
-								th:action="@{/CategoryList.html/delete_category}">
-								<input type="submit" value="Del" onclick="DelCategory()">
-						</div>
-					</div>
-					<div class="card-body">
-						<div
-							class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
-							<div class="dataTable-top"></div>
-							<div class="dataTable-container">
-								<table id="datatablesSimple" class="dataTable-table">
-									<thead>
-										<tr>
-											<th data-sortable="" style="width: 9.693%;"><a href="#"
-												class="dataTable-sorter"></a></th>
-											<th data-sortable="" style="width: 29.2499%;"><a
-												href="#" class="dataTable-sorter">建立日期</a></th>
-											<th data-sortable="" style="width: 15.4938%;"><a
-												href="#" class="dataTable-sorter">分類</a></th>
-											<th data-sortable="" style="width: 9.1225%;"><a href="#"
-												class="dataTable-sorter">流水帳數</a></th>
-											<th data-sortable="" style="width: 9.5841%;"><a href="#"
-												class="dataTable-sorter">Act</a></th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr th:if="${category.empty}">
-											<td colspan="5">沒有任何分類</td>
-										</tr>
-										<tr th:each="c, row : ${category}">
-											<td><input type="checkbox" class="cbx"
-												th:value="${c.categoryid}" name="categoryID"></td>
-											<td><span th:text="${c.createDate}"></span></td>
-											<td><span th:text="${c.title}"></span></td>
-											<td><span th:text="${count[row.index]}"></span><input
-												type="hidden" th:value="${count[row.index]}"
-												name="account_count"></td>
-											<td><a
-												th:href="@{'/CategoryDetail.html?cid=' + ${c.categoryid}}">Edit</a></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-							<div class="dataTable-bottom">
-								<nav class="dataTable-pagination">
-									<ul class="dataTable-pagination-list">
-										<li th:each="p : ${total}"><a
-											th:href="@{'/CategoryList.html?uid=' + ${userid} + '&page=' + ${p}}"
-											data-page="${p}" th:text="${p}"></a></li>
-									</ul>
-								</nav>
+							<div
+								class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+								<div class="dataTable-top"></div>
+								<div class="dataTable-container">
+									<table id="datatablesSimple" class="dataTable-table">
+										<thead>
+											<tr>
+												<th data-sortable="" style="width: 9.693%;"><a href="#"
+													class="dataTable-sorter"></a></th>
+												<th data-sortable="" style="width: 29.2499%;"><a
+													href="#" class="dataTable-sorter">建立日期</a></th>
+												<th data-sortable="" style="width: 15.4938%;"><a
+													href="#" class="dataTable-sorter">分類</a></th>
+												<th data-sortable="" style="width: 9.1225%;"><a
+													href="#" class="dataTable-sorter">流水帳數</a></th>
+												<th data-sortable="" style="width: 9.5841%;"><a
+													href="#" class="dataTable-sorter">Act</a></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:if="${category.empty}">
+												<td colspan="5">沒有任何分類</td>
+											</tr>
+											<tr th:each="c, row : ${category}">
+												<td><input type="checkbox" class="cbx"
+													th:value="${c.categoryid}" name="categoryID"></td>
+												<td><span th:text="${c.createDate}"></span></td>
+												<td><span th:text="${c.title}"></span></td>
+												<td><span th:text="${count[row.index]}"></span><input
+													type="hidden" th:value="${count[row.index]}"
+													name="account_count"></td>
+												<td><a
+													th:href="@{'/CategoryDetail.html?cid=' + ${c.categoryid}}">Edit</a></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="dataTable-bottom">
+									<nav class="dataTable-pagination">
+										<ul class="dataTable-pagination-list">
+											<li th:each="p : ${total}"><a
+												th:href="@{'/CategoryList.html?uid=' + ${userid} + '&page=' + ${p}}"
+												data-page="${p}" th:text="${p}"></a></li>
+										</ul>
+									</nav>
+								</div>
 							</div>
 						</div>
-					</div>
 					</form>
 				</div>
 			</main>
 		</div>
 	</div>
-	<script>
-		function DelCategory() {
-			var table = document.getElementById("datatablesSimple");
-
-			for (var i = 1; i < table.rows.length; i++) {
-				var row = table.rows[i];
-				var cbx = row.cells[0].getElementsByClassName('cbx');
-				if ('checkbox' == cbx.type && true == cbx.checked) {
-					table.deleteRow(i);
-				}
-			}
-			confirm('確定要刪除已選分類?');
-		}
-	</script>
 </body>
 </html>

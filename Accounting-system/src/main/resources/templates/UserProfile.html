@@ -43,10 +43,10 @@
 							 個人資訊
 						</a>
 						<div class="sb-sidenav-menu-heading">流水帳紀錄</div>
-						<a class="nav-link" href="AccountingList.html">
+						<a class="nav-link" th:href="@{'AccountingList.html?uid=' + ${userid}}">
 							 流水帳管理
 						</a> <a class="nav-link"
-							th:href="@{'CategoryList.html?uid=' + ${test}}">
+							th:href="@{'CategoryList.html?uid=' + ${userid}}">
 							 分類管理
 						</a>
 					</div>
