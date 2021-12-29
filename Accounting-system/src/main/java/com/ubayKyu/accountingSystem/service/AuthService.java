@@ -32,14 +32,15 @@ public class AuthService implements UserDetailsService {
 	        String password = info.getPwd(); 
 	        String encodepwd = new BCryptPasswordEncoder().encode(password);
 	        Collection<GrantedAuthority> authList = getAuthorities();
+	        String level;
 	        
 	        if(info.getUserLevel() == 0)
 	        {
-	        	String level = "ADMIN";
+	        	level = "ADMIN";
 	        }
 	        else
 	        {
-	        	String level = "NORMAL";
+	        	level = "NORMAL";
 	        }
 	        
 	        return new User(username, encodepwd, true, true, true, true, authList);

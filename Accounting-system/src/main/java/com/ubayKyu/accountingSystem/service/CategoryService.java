@@ -2,7 +2,6 @@ package com.ubayKyu.accountingSystem.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -41,11 +40,11 @@ public class CategoryService {
 		return repository.findCategoryDDLByUserID(userid);
 	}
 
-	public void updateCategoryByCID(String titletxt, String remarkstxt, Integer cid) throws Exception {
+	public void updateCategoryByCID(String titletxt, String remarkstxt, LocalDateTime ct, Integer cid) throws Exception {
 		if (titletxt.length() > 20) {
 			throw new Exception("標題字串長度大於20");
 		}
-		repository.UpdateCategoryByCID(titletxt, remarkstxt, cid);
+		repository.UpdateCategoryByCID(titletxt, remarkstxt, ct, cid);
 	}
 
 	public Integer getlastCID() {
@@ -69,5 +68,9 @@ public class CategoryService {
 			Isrepeat = false;
 		}
 		return Isrepeat;
+	}
+
+	public void DeleteCategoryByUserID(String indextxt) {
+		repository.DeleteAllCategoryByUserID(indextxt);
 	}
 }

@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ubayKyu.accountingSystem.entity.AccountingNote;
-import com.ubayKyu.accountingSystem.entity.Category;
 import com.ubayKyu.accountingSystem.repository.AccountingNoteRepository;
 
 @Service
@@ -72,14 +71,14 @@ public class AccountingNoteService {
 	}
 
 	public void updateAccountingByID(String useridtxt, String Captiontxt, String remarkstxt, Integer amount,
-			Integer acttype, Integer cid, Integer aid) throws Exception {
+			Integer acttype, Integer cid, LocalDateTime ct, Integer aid) throws Exception {
 		if (Captiontxt.length() > 20) {
 			throw new Exception("標題字串長度大於20");
 		}
 		if (amount < 1 || amount > 10000000) {
 			throw new Exception("金額應在一至一千萬以內");
 		}
-		repository.UpdateAccountingByID(useridtxt, Captiontxt, remarkstxt, amount, acttype, cid, aid);
+		repository.UpdateAccountingByID(useridtxt, Captiontxt, remarkstxt, amount, acttype, cid, ct, aid);
 	}
 
 	public void createAccountingBy(String uidtxt, String captiontxt, String remarkstxt, Integer amount, Integer act,
@@ -91,5 +90,10 @@ public class AccountingNoteService {
 			throw new Exception("金額應在一至一千萬以內");
 		}
 		repository.createAccounting(uidtxt, captiontxt, remarkstxt, amount, act, ct, cidtxt);
+	}
+
+	public void DeleteAccountingByUserID(String useridtxt) {
+		repository.DeleteAllAccountingByUserID(useridtxt);
+		
 	}
 }

@@ -37,8 +37,8 @@ public class UserInfoService {
 		repository.UpdateUserInfoByID(nametxt, emailtxt, useridtxt);
 	}
 
-	public List<UserInfo> getAllUserList(Pageable pageable) {
-		return repository.findAllUserListSQL();
+	public List<UserInfo> getAllUserList(String useridtxt, Pageable pageable) {
+		return repository.findAllUserListExceptcUserSQL(useridtxt);
 	}
 
 	public UserInfo getUserInfoByUserID(String userid) {
