@@ -19,7 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -40,13 +39,12 @@ public class AccountingNoteController {
 	public String AccountingList(@RequestParam(value = "uid", required = false) String useridtxt,
 			@RequestParam(value = "page", required = false) String pagetxt, Model model, HttpServletResponse response,
 			HttpSession session) {
-		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-
 		// 判斷登入
-		if (currentUser == null) {
+		if (session.getAttribute("loginUser") == null) {
 			session.removeAttribute("loginUser");
 			return "redirect:Default.html";
 		}
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
 
 		// 頁面權限檢查
 		boolean IsAdmin;
@@ -156,13 +154,14 @@ public class AccountingNoteController {
 	@GetMapping("/AccountingDetail.html")
 	public String AccountingDetail(@RequestParam(value = "id", required = false) String accountingidtxt, Model model,
 			HttpSession session) {
-		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-		String useridtxt = currentUser.getId().toString();
 		// 判斷登入
-		if (currentUser == null) {
+		if (session.getAttribute("loginUser") == null) {
 			session.removeAttribute("loginUser");
 			return "redirect:Default.html";
 		}
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
+		String useridtxt = currentUser.getId().toString();
+
 		// 頁面權限檢查
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
@@ -214,6 +213,7 @@ public class AccountingNoteController {
 
 		// 編輯模式
 		if (accountingidtxt != null) {
+			LocalDateTime ct = LocalDateTime.now();
 			Integer aid = Integer.parseInt(accountingidtxt);
 			Integer act = Integer.parseInt(acttype);
 			Integer amount = Integer.parseInt(amounttxt);
@@ -224,7 +224,7 @@ public class AccountingNoteController {
 			model.addAttribute("newAccounting", false);
 
 			try {
-				service.updateAccountingByID(uidtxt, captiontxt, remarkstxt, amount, act, cid, aid);
+				service.updateAccountingByID(uidtxt, captiontxt, remarkstxt, amount, act, cid, ct, aid);
 			} catch (Exception ex) {
 				rediatt.addFlashAttribute("errormsg", ex.getLocalizedMessage());
 			}
@@ -236,13 +236,14 @@ public class AccountingNoteController {
 
 	@GetMapping("/AccountingDetail.html/new")
 	public String newAccounting(Model model, HttpSession session) {
-		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-		String useridtxt = currentUser.getId().toString();
 		// 判斷登入
-		if (currentUser == null) {
+		if (session.getAttribute("loginUser") == null) {
 			session.removeAttribute("loginUser");
 			return "redirect:Default.html";
 		}
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
+		String useridtxt = currentUser.getId().toString();
+
 		// 頁面權限檢查
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
