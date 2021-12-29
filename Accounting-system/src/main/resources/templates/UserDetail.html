@@ -92,8 +92,9 @@
 										<td><span th:text="${info_edit}" style="color: blue"></span></td>
 									</tr>
 								</table>
-								<input type="submit" th:value="${newUser} ? 'Create' : 'Update'"> <input type="submit"
-									value="Delete">
+								<input type="submit" th:value="${newUser} ? 'Create' : 'Update'"> 
+								<input type="button" value="取消"
+									onclick="location.href='/UserList.html?cUser=admin'">
 							</form>
 							<span style="color: red" th:text="${errormsg}"></span>
 						</div>
