@@ -40,10 +40,11 @@
 						<div th:if="${level}" th:include="/layouts/AdminMenu"></div>
 						<div class="sb-sidenav-menu-heading">後台管理</div>
 						<a class="nav-link"
-							th:href="@{'UserProfile.html?account=' + ${acctxt}}"> 個人資訊</a>
+							th:href="@{'UserProfile.html?account=' + ${ACC}}"> 個人資訊</a>
 						<div class="sb-sidenav-menu-heading">流水帳紀錄</div>
-						<a class="nav-link" href="AccountingList.html"> 流水帳管理 </a> <a
-							class="nav-link"
+						<a class="nav-link"
+							th:href="@{'AccountingList.html?uid=' + ${userid}}"> 流水帳管理 </a>
+						<a class="nav-link"
 							th:href="@{'CategoryList.html?uid=' + ${userid}}"> 分類管理</a>
 					</div>
 				</div>
@@ -57,74 +58,75 @@
 						<li class="breadcrumb-item">流水帳紀錄</li>
 						<li class="breadcrumb-item active">流水帳管理</li>
 					</ol>
-					<div class="card mb-4">
+					<form method="post" th:action="@{/AccountingList.html}">
+						<div class="card mb-4">
+							<div class="card-body">
+							<input type="button" value="Add" onclick="location.href='/AccountingDetail.html/new'">&nbsp;
+								<input type="submit" value="Del" onclick="return confirm('確定要刪除已選流水帳?')">&nbsp;
+								總金額小計
+								<label th:text="${totalamount} + '元'"></label>&nbsp;
+								本月小計
+								<label th:text="${monthly} + '元'"></label>
+							</div>
+						</div>
 						<div class="card-body">
-							<a th:href="@{/AccountingDetail.html/new}"> <input
-								type="button" value="Add">
-							</a> <input type="submit" value="Del"> <span>總金額小計</span><span>本月小計</span>
-						</div>
-					</div>
-					<div class="card-body">
-						<div
-							class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
-							<div class="dataTable-top"></div>
-							<div class="dataTable-container">
-								<table id="datatablesSimple" class="dataTable-table">
-									<thead>
-										<tr>
-											<th data-sortable="" style="width: 9.693%;"><a href="#"
-												class="dataTable-sorter"></a></th>
-											<th data-sortable="" style="width: 29.2499%;"><a
-												href="#" class="dataTable-sorter">建立日期</a></th>
-											<th data-sortable="" style="width: 15.4938%;"><a
-												href="#" class="dataTable-sorter">分類</a></th>
-											<th data-sortable="" style="width: 9.1225%;"><a href="#"
-												class="dataTable-sorter">收 / 支</a></th>
-											<th data-sortable="" style="width: 14.9146%;"><a
-												href="#" class="dataTable-sorter">金額</a></th>
-											<th data-sortable="" style="width: 11.5841%;"><a
-												href="#" class="dataTable-sorter">標題</a></th>
-											<th data-sortable="" style="width: 9.5841%;"><a href="#"
-												class="dataTable-sorter">Act</a></th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr th:if="${accounting.empty}">
-											<td colspan="7">沒有任何流水帳</td>
-										</tr>
-										<tr th:each="a, row : ${accounting}">
-											<td><input type="checkbox" class="cbx"
-												th:value="${a.id}" name="accountingID"></td>
-											<td><span th:text="${a.createDate}"></span></td>
-											<td><span></span></td>
-											<td><span th:text="${a.actType}"></span></td>
-											<td><span th:text="${a.amount}"></span></td>
-											<td><span th:text="${a.caption}"></span></td>
-											<td><a
-												th:href="@{'/AccountingDetail.html?id=' + ${a.id}}">Edit</a></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-							<div class="dataTable-bottom">
-								<nav class="dataTable-pagination">
-									<ul class="dataTable-pagination-list">
-										<li th:each="p : ${total}"><a
-											th:href="@{'/AccountingList.html?uid=' + ${userid} + '&page=' + ${p}}"
-											data-page="${p}" th:text="${p}"></a></li>
-									</ul>
-								</nav>
+							<div
+								class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+								<div class="dataTable-top"></div>
+								<div class="dataTable-container">
+									<table id="datatablesSimple" class="dataTable-table">
+										<thead>
+											<tr>
+												<th data-sortable="" style="width: 9.693%;"><a href="#"
+													class="dataTable-sorter"></a></th>
+												<th data-sortable="" style="width: 29.2499%;"><a
+													href="#" class="dataTable-sorter">建立日期</a></th>
+												<th data-sortable="" style="width: 15.4938%;"><a
+													href="#" class="dataTable-sorter">分類</a></th>
+												<th data-sortable="" style="width: 9.1225%;"><a
+													href="#" class="dataTable-sorter">收 / 支</a></th>
+												<th data-sortable="" style="width: 14.9146%;"><a
+													href="#" class="dataTable-sorter">金額</a></th>
+												<th data-sortable="" style="width: 11.5841%;"><a
+													href="#" class="dataTable-sorter">標題</a></th>
+												<th data-sortable="" style="width: 9.5841%;"><a
+													href="#" class="dataTable-sorter">Act</a></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:if="${accounting.empty}">
+												<td colspan="7">沒有任何流水帳</td>
+											</tr>
+											<tr th:each="a, row : ${accounting}">
+												<td><input type="checkbox" class="cbx"
+													th:value="${a.id}" name="accountingID"></td>
+												<td><span th:text="${a.createDate}"></span></td>
+												<td><span th:text="${a.Title}"></span></td>
+												<td><span th:text="${a.actType} == 0 ? '收入':'支出'"></span></td>
+												<td><span th:text="${a.amount}"
+													th:style="${a.actType} == 0 ? 'color: black;':'color: red'"></span></td>
+												<td><span th:text="${a.caption}"></span></td>
+												<td><a
+													th:href="@{'/AccountingDetail.html?id=' + ${a.id}}">Edit</a></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="dataTable-bottom">
+									<nav class="dataTable-pagination">
+										<ul class="dataTable-pagination-list">
+											<li th:each="p : ${total}"><a
+												th:href="@{'/AccountingList.html?uid=' + ${userid} + '&page=' + ${p}}"
+												data-page="${p}" th:text="${p}"></a></li>
+										</ul>
+									</nav>
+								</div>
 							</div>
 						</div>
-					</div>
+					</form>
 				</div>
 			</main>
 		</div>
 	</div>
-	<script>
-		function DelCategory() {
-			confirm('確定要刪除已選分類?');
-		}
-	</script>
 </body>
 </html>

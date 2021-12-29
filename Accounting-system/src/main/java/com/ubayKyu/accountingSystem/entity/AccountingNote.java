@@ -13,45 +13,35 @@ import javax.persistence.Id;
 public class AccountingNote {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID", nullable = false, columnDefinition = "int")
 	public Integer id;
-	@Column(name = "UserID")
-	public UUID userid;
-	@Column(name = "Caption")
+	@Column(name = "UserID", nullable = false, columnDefinition = "uniqueidentifier")
+	public String userid;
+	@Column(name = "Caption", nullable=false, unique=false, columnDefinition = "nvarchar(20)")
 	public String caption;
-	@Column(name = "Remarks")
+	@Column(name = "Remarks", nullable=false, unique=false, columnDefinition = "nvarchar(500)")
 	public String remarks;
-	@Column(name = "Amount")
+	@Column(name = "Amount", nullable=false, unique=false, columnDefinition = "int")
 	public Integer amount;
-	@Column(name = "ActType")
+	@Column(name = "ActType", nullable=false, unique=false, columnDefinition = "int")
 	public Integer actType;
-	@Column(name = "CreateDate")
+	@Column(name = "CreateDate", nullable=false, unique=false, columnDefinition = "datetime")
 	public LocalDateTime createDate;
-	@Column(name = "CategoryID")
+	@Column(name = "CategoryID", nullable=true, unique=false, columnDefinition = "int")
 	public Integer categoryid;
-		
-	public AccountingNote(Integer id, UUID userid, String caption, String remarks, Integer amount, Integer actType,
-			LocalDateTime createDate, Integer categoryid) {
-		super();
-		this.id = id;
-		this.userid = userid;
-		this.caption = caption;
-		this.remarks = remarks;
-		this.amount = amount;
-		this.actType = actType;
-		this.createDate = createDate;
-		this.categoryid = categoryid;
-	}
 	
+	public String title;
+		
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public UUID getUserid() {
+	public String getUserid() {
 		return userid;
 	}
-	public void setUserid(UUID userid) {
+	public void setUserid(String userid) {
 		this.userid = userid;
 	}
 	public String getCaption() {
@@ -89,5 +79,11 @@ public class AccountingNote {
 	}
 	public void setCategoryid(Integer categoryid) {
 		this.categoryid = categoryid;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

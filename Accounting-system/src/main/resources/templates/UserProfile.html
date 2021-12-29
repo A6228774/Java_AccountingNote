@@ -39,16 +39,13 @@
 					<div class="nav">
 						<div th:if="${level}" th:include="/layouts/AdminMenu"></div>
 						<div class="sb-sidenav-menu-heading">後台管理</div>
-						<a class="nav-link" href="@{'UserProfile.html?account=' + ${ACC}}">
-							 個人資訊
-						</a>
+						<a class="nav-link" th:href="@{'/UserProfile.html?account=' + ${ACC}}">
+							個人資訊 </a>
 						<div class="sb-sidenav-menu-heading">流水帳紀錄</div>
-						<a class="nav-link" th:href="@{'AccountingList.html?uid=' + ${userid}}">
-							 流水帳管理
-						</a> <a class="nav-link"
-							th:href="@{'CategoryList.html?uid=' + ${userid}}">
-							 分類管理
-						</a>
+						<a class="nav-link"
+							th:href="@{'AccountingList.html?uid=' + ${userid}}"> 流水帳管理 </a> <a
+							class="nav-link"
+							th:href="@{'CategoryList.html?uid=' + ${userid}}"> 分類管理 </a>
 					</div>
 				</div>
 			</nav>
@@ -63,7 +60,7 @@
 					</ol>
 					<div class="card mb-4">
 						<div class="card-body">
-							<form>
+							<form method="post" th:action="@{/UserProfile.html?account=} + ${ACC}">
 								<table>
 									<tr>
 										<td>帳號</td>
@@ -72,15 +69,16 @@
 									<tr>
 										<td>姓名</td>
 										<td><input type="text" disabled required
-											th:value="${Name}"></td>
+											th:value="${Name}" id="name" name="name"></td>
 									</tr>
 									<tr>
 										<td>Email</td>
 										<td><input type="email" disabled required
-											th:value="${Email}"></td>
+											th:value="${Email}" id="email" name="email"></td>
 									</tr>
-								</table>
-								<input type="submit" value="修改">
+								</table><br>
+								<input type="submit" value="保存" style="display: none" id="savebtn"> <input type="button"
+									value="修改" onclick="triggerEdit()" id="editbtn">
 							</form>
 							<input type="hidden" th:value="${test}" />
 						</div>
@@ -89,5 +87,13 @@
 			</main>
 		</div>
 	</div>
+	<script>
+		function triggerEdit() {
+			document.getElementById("name").disabled = false;
+			document.getElementById("email").disabled = false;
+			document.getElementById("editbtn").style.visibility = 'hidden';
+			document.getElementById("savebtn").style.display = 'initial';
+		}
+	</script>
 </body>
 </html>

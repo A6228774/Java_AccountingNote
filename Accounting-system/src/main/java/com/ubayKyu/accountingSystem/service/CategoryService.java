@@ -36,7 +36,7 @@ public class CategoryService {
 	public Category getCategoryByCID(Integer cid) {
 		return repository.findCategoryByCID(cid);
 	}
-	
+
 	public List<Category> getCategoryDLLByUserID(String userid) {
 		return repository.findCategoryDDLByUserID(userid);
 	}
@@ -58,5 +58,16 @@ public class CategoryService {
 			throw new Exception("標題字串長度大於20");
 		}
 		repository.CreateCategoryByCID(uidtxt, titletxt, remarkstxt, ct);
+	}
+
+	public Boolean checkRepeat(String titletxt, String userid) {
+		Integer cnt = repository.IsRepeatTitle(titletxt, userid);
+		boolean Isrepeat;
+		if (cnt > 0) {
+			Isrepeat = true;
+		} else {
+			Isrepeat = false;
+		}
+		return Isrepeat;
 	}
 }

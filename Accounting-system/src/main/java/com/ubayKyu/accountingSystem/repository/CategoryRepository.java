@@ -26,21 +26,25 @@ public interface CategoryRepository extends JpaRepository<Category, Integer>,Jpa
 	@Query(value = "SELECT COUNT(*) as CNT from AccountingNote WHERE CategoryID=?1", nativeQuery = true)
 	Integer AccountingInCategory(Integer cid);
 
-	//@Query(value = "DELETE FROM Category WHERE CategoryID=?1", nativeQuery = true)
-	//public void DeleteCategoryByCID(Integer cid);
-
 	@Query(value = "SELECT * FROM Category WHERE CategoryID=?1", nativeQuery = true)
 	Category findCategoryByCID(Integer cid);
 	
 	@Query(value = "SELECT * FROM Category WHERE UserID=?1", nativeQuery = true)
 	List<Category> findCategoryDDLByUserID(String userid);
 
+	@Transactional
+    @Modifying
 	@Query(value = "UPDATE Category SET Title=?1, Remarks=?2 WHERE CategoryID=?3", nativeQuery = true)
 	public void UpdateCategoryByCID(String titletxt, String remarkstxt, Integer cid);
 	
 	@Query(value = "SELECT Top 1 CategoryID FROM Category ORDER BY CategoryID DESC", nativeQuery = true)
 	Integer lastCategory();
 	
+	@Transactional
+    @Modifying
 	@Query(value = "INSERT INTO Category (UserID, Title, Remarks, CreateDate) VALUES (?1, ?2, ?3, ?4)", nativeQuery = true)
-	Category CreateCategoryByCID(String userid, String titletxt, String remarkstxt, LocalDateTime ct);
+	public void CreateCategoryByCID(String userid, String titletxt, String remarkstxt, LocalDateTime ct);
+	
+	@Query(value = "SELECT COUNT(Title) FROM Category WHERE Title=?1 AND CategoryID=?2", nativeQuery = true)
+	Integer IsRepeatTitle(String Title, String userid);
 }

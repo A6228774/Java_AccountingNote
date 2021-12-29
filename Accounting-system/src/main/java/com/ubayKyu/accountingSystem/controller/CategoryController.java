@@ -53,6 +53,7 @@ public class CategoryController {
 			IsAdmin = false;
 		}
 		model.addAttribute("level", IsAdmin);
+		model.addAttribute("ACC", currentUser.getAccount());
 
 		if (useridtxt != null) {
 			// if (!useridtxt.equalsIgnoreCase(currentUser.getId().toString())) {
@@ -149,7 +150,7 @@ public class CategoryController {
 			IsAdmin = false;
 		}
 		model.addAttribute("level", IsAdmin);
-		model.addAttribute("acctxt", currentUser.getAccount());
+		model.addAttribute("ACC", currentUser.getAccount());
 		model.addAttribute("userid", currentUser.getId().toString());
 
 		if (cidtxt != null) {
@@ -189,7 +190,7 @@ public class CategoryController {
 			try {
 				service.updateCategoryByCID(titletxt, remarkstxt, cid);
 			} catch (Exception ex) {
-				rediatt.addFlashAttribute("errormsg", ex.getMessage());
+				rediatt.addFlashAttribute("errormsg", ex.getLocalizedMessage());
 			}
 			return "redirect:CategoryDetail.html?cid=" + cidtxt;
 		} else {
@@ -215,7 +216,7 @@ public class CategoryController {
 			IsAdmin = false;
 		}
 		model.addAttribute("level", IsAdmin);
-		model.addAttribute("acctxt", currentUser.getAccount());
+		model.addAttribute("ACC", currentUser.getAccount());
 		model.addAttribute("userid", currentUser.getId().toString());
 
 		Category category = new Category();
@@ -230,19 +231,27 @@ public class CategoryController {
 
 	@PostMapping("/CategoryDetail.html/new")
 	public String CreateCategoryDetail(@ModelAttribute("create") Category category,
-			@ModelAttribute("title") String titletxt, @ModelAttribute("remarks") String remarkstxt, Model model,
-			HttpSession session, HttpServletResponse response) throws Exception {
+			@ModelAttribute("title") String titletxt, @ModelAttribute("remarks") String remarkstxt,
+			RedirectAttributes rediatt, HttpSession session, HttpServletResponse response) throws Exception {
 		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
 		String uidtxt = currentUser.getId().toString();
+		
+		//檢查重複標題
+		Boolean IsRepeat = service.checkRepeat(titletxt, uidtxt);
+		if (IsRepeat == true) {
+			rediatt.addFlashAttribute("titlemsg", "此分類已存在，請使用其他分類名稱");
+			return "redirect:/UserDetail.html/new";
+		} else {
+			// 新增模式
+			LocalDateTime ct = LocalDateTime.now();
 
-		// 新增模式
-		LocalDateTime ct = LocalDateTime.now();
+			try {
+				service.createCategoryByCID(uidtxt, titletxt, remarkstxt, ct);
 
-		try {
-			service.createCategoryByCID(uidtxt, titletxt, remarkstxt, ct);
-			response.sendRedirect("/CategoryList.html?uid=" + uidtxt);
-		} catch (Exception ex) {
-			model.addAttribute("errormsg", ex.getLocalizedMessage());
+			} catch (Exception ex) {
+				rediatt.addFlashAttribute("errormsg", ex.getLocalizedMessage());
+				return "redirect:/CategoryDetail.html/new";
+			}
 		}
 		return "redirect:/CategoryList.html?uid=" + uidtxt;
 	}

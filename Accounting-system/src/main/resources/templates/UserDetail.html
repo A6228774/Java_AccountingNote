@@ -23,9 +23,11 @@
 		</form>
 		<!-- Navbar-->
 		<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-			<a class="nav-link dropdown-toggle" id="navbarDropdown" href="Default.html"
-				role="button" data-bs-toggle="dropdown" aria-expanded="false"> <img
-				th:src="@{/Images/admin_user.png}" width="32" height="32">
+			<a class="nav-link dropdown-toggle" id="navbarDropdown"
+				href="/logout" role="button" data-bs-toggle="dropdown"
+				aria-expanded="false"> <span th:if="${level}"
+				th:insert="/layouts/AdminIcon"></span> <span th:unless="${level}"
+				th:insert="/layouts/Icon"></span>
 			</a>
 		</ul>
 	</nav>
@@ -35,20 +37,15 @@
 				id="sidenavAccordion">
 				<div class="sb-sidenav-menu">
 					<div class="nav">
-						<div class="sb-sidenav-menu-heading">管理者後台</div>
-						<a class="nav-link" href="UserList.html">
-							<div class="sb-nav-link-icon"></div> 會員管理
-						</a>
+						<div th:if="${level}" th:include="/layouts/AdminMenu"></div>
 						<div class="sb-sidenav-menu-heading">後台管理</div>
-						<a class="nav-link" href="UserProfile.html">
-							<div class="sb-nav-link-icon"></div> 個人資訊
-						</a>
+						<a class="nav-link"
+							th:href="@{'UserProfile.html?account=' + ${ACC}}"> 個人資訊</a>
 						<div class="sb-sidenav-menu-heading">流水帳紀錄</div>
-						<a class="nav-link" href="AccountingList.html">
-							<div class="sb-nav-link-icon"></div> 流水帳管理
-						</a> <a class="nav-link" href="CategoryList.html">
-							<div class="sb-nav-link-icon"></div> 分類管理
-						</a>
+						<a class="nav-link"
+							th:href="@{'AccountingList.html?uid=' + ${userid}}"> 流水帳管理 </a> <a
+							class="nav-link"
+							th:href="@{'CategoryList.html?uid=' + ${userid}}"> 分類管理</a>
 					</div>
 				</div>
 			</nav>
@@ -63,39 +60,42 @@
 					</ol>
 					<div class="card mb-4">
 						<div class="card-body">
-							<form>
+							<form method="post" th:action="${newUser} ? @{/UserDetail.html/new} : @{'/UserDetail.html?info=' + ${userid}}">
 								<table>
 									<tr>
 										<td>帳號</td>
-										<td><label></label></td>
+										<td><input type="text" required th:disabled="${!newUser}"
+											th:value="${info_account}" id="account" name="account">
+											<span th:text="${accmsg}"></span></td>
 									</tr>
 									<tr>
 										<td>姓名</td>
-										<td><input type="text" required></td>
+										<td><input type="text" required th:value="${info_name}" id="name" name="name"></td>
 									</tr>
 									<tr>
 										<td>Email</td>
-										<td><input type="email" required></td>
+										<td><input type="email" required th:value="${info_email}" id="email" name="email"></td>
 									</tr>
 									<tr>
 										<td>等級</td>
 										<td><select id="userlevel" name="userlevel">
-												<option value="admin">管理員</option>
-												<option value="normal">一般會員</option>
+												<option th:value="0" th:selected="${info_level}">管理者</option>
+												<option th:value="1" th:selected="${info_level}">一般會員</option>
 										</select></td>
 									</tr>
 									<tr>
-										<td>建立時間</td>
-										<td><label></label></td>
+										<td>建立時間：</td>
+										<td><span th:text="${info_create}" style="color: red"></span></td>
 									</tr>
 									<tr>
-										<td>修改時間</td>
-										<td><label></label></td>
+										<td>修改時間：</td>
+										<td><span th:text="${info_edit}" style="color: blue"></span></td>
 									</tr>
 								</table>
-								<input type="submit" value="Save">
-								<input type="submit" value="Delete">
+								<input type="submit" th:value="${newUser} ? 'Create' : 'Update'"> <input type="submit"
+									value="Delete">
 							</form>
+							<span style="color: red" th:text="${errormsg}"></span>
 						</div>
 					</div>
 				</div>
