@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 
 import com.ubayKyu.accountingSystem.entity.UserInfo;
@@ -33,8 +32,8 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, UUID> {
 	@Query(value = "UPDATE UserInfo SET Name=?1, Email=?2 WHERE ID=?3", nativeQuery = true)
 	public void UpdateUserInfoByID(String name, String email, String userid);
 
-	@Query(value = "SELECT * FROM UserInfo", nativeQuery = true)
-	List<UserInfo> findAllUserListSQL();
+	@Query(value = "SELECT * FROM UserInfo EXCEPT SELECT * FROM UserInfo WHERE ID=?1", nativeQuery = true)
+	List<UserInfo> findAllUserListExceptcUserSQL(String currentUser);
 
 	@Query(value = "SELECT * from UserInfo WHERE ID=?1", nativeQuery = true)
 	UserInfo findByUserIDSQL(String userid);

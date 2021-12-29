@@ -2,7 +2,6 @@ package com.ubayKyu.accountingSystem.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -34,8 +33,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer>,Jpa
 
 	@Transactional
     @Modifying
-	@Query(value = "UPDATE Category SET Title=?1, Remarks=?2 WHERE CategoryID=?3", nativeQuery = true)
-	public void UpdateCategoryByCID(String titletxt, String remarkstxt, Integer cid);
+	@Query(value = "UPDATE Category SET Title=?1, Remarks=?2, CreateDate=?3 WHERE CategoryID=?4", nativeQuery = true)
+	public void UpdateCategoryByCID(String titletxt, String remarkstxt, LocalDateTime ct, Integer cid);
 	
 	@Query(value = "SELECT Top 1 CategoryID FROM Category ORDER BY CategoryID DESC", nativeQuery = true)
 	Integer lastCategory();
@@ -45,6 +44,9 @@ public interface CategoryRepository extends JpaRepository<Category, Integer>,Jpa
 	@Query(value = "INSERT INTO Category (UserID, Title, Remarks, CreateDate) VALUES (?1, ?2, ?3, ?4)", nativeQuery = true)
 	public void CreateCategoryByCID(String userid, String titletxt, String remarkstxt, LocalDateTime ct);
 	
-	@Query(value = "SELECT COUNT(Title) FROM Category WHERE Title=?1 AND CategoryID=?2", nativeQuery = true)
+	@Query(value = "SELECT COUNT(Title) FROM Category WHERE Title=?1 AND UserID=?2", nativeQuery = true)
 	Integer IsRepeatTitle(String Title, String userid);
+	
+	@Query(value = "DELETE FROM Category WHERE UserID=?1", nativeQuery = true)
+	void DeleteAllCategoryByUserID(String indextxt);
 }

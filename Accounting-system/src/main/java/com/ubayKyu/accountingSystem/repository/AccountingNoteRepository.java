@@ -14,7 +14,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.ubayKyu.accountingSystem.entity.AccountingNote;
-import com.ubayKyu.accountingSystem.entity.Category;
 
 public interface AccountingNoteRepository
 		extends JpaRepository<AccountingNote, Integer>, JpaSpecificationExecutor<AccountingNote> {
@@ -60,15 +59,19 @@ public interface AccountingNoteRepository
 
 	@Query(value = "SELECT * FROM AccountingNote WHERE ID=?1", nativeQuery = true)
 	AccountingNote findAccountingByID(Integer accountingid);
-	
-	@Transactional
-    @Modifying
-	@Query(value = "UPDATE AccountingNote SET UserID=?1, Caption=?2, Remarks=?3, Amount=?4, ActType=?5, CategoryID=?6 WHERE ID=?7", nativeQuery = true)
-	public void UpdateAccountingByID(String useridtxt, String Captiontxt, String remarkstxt, Integer amount, Integer acttype, Integer cid, Integer aid);
 
 	@Transactional
-    @Modifying
+	@Modifying
+	@Query(value = "UPDATE AccountingNote SET UserID=?1, Caption=?2, Remarks=?3, Amount=?4, ActType=?5, CategoryID=?6, CreateDate=?7 WHERE ID=?8", nativeQuery = true)
+	public void UpdateAccountingByID(String useridtxt, String Captiontxt, String remarkstxt, Integer amount,
+			Integer acttype, Integer cid, LocalDateTime ct, Integer aid);
+
+	@Transactional
+	@Modifying
 	@Query(value = "INSERT INTO AccountingNote (UserID, Caption, Remarks, Amount, ActType, CreateDate, CategoryID) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)", nativeQuery = true)
 	public void createAccounting(String uidtxt, String captiontxt, String remarkstxt, Integer amount, Integer act,
 			LocalDateTime ct, Integer cidtxt);
+
+	@Query(value = "DELETE FROM AccountingNote WHERE UserID=?1", nativeQuery = true)
+	void DeleteAllAccountingByUserID(String useridtxt);
 }
