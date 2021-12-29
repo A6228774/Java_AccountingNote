@@ -186,10 +186,11 @@ public class CategoryController {
 		// 編輯模式
 		if (cidtxt != null) {
 			Integer cid = Integer.parseInt(cidtxt);
+			LocalDateTime ct = LocalDateTime.now();
 			model.addAttribute("newCat", false);
 
 			try {
-				service.updateCategoryByCID(titletxt, remarkstxt, cid);
+				service.updateCategoryByCID(titletxt, remarkstxt, ct, cid);
 			} catch (Exception ex) {
 				rediatt.addFlashAttribute("errormsg", ex.getLocalizedMessage());
 			}

@@ -19,17 +19,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ubayKyu.accountingSystem.entity.UserInfo;
+import com.ubayKyu.accountingSystem.service.AccountingNoteService;
+import com.ubayKyu.accountingSystem.service.CategoryService;
 import com.ubayKyu.accountingSystem.service.UserInfoService;
 
 @Controller
 public class UserInfoController {
 	@Autowired
 	private UserInfoService service;
+	@Autowired
+	private AccountingNoteService ACCservice;
+	@Autowired
+	private CategoryService Cservice;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -37,8 +42,7 @@ public class UserInfoController {
 	@GetMapping("/UserProfile.html")
 	public String UserProfileInfo(@RequestParam(value = "account", required = true) String acctxt, Model model,
 			HttpSession session, HttpServletResponse response) throws IOException {
-		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-		if (currentUser == null) {
+		if (session.getAttribute("loginUser") == null) {
 			session.removeAttribute("loginUser");
 			response.sendRedirect("/Default.html");
 		} else {
@@ -51,7 +55,8 @@ public class UserInfoController {
 			model.addAttribute("Email", info.getEmail().toString());
 			model.addAttribute("userid", uuidtxt);
 		}
-
+		
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
 			IsAdmin = true;
@@ -65,12 +70,11 @@ public class UserInfoController {
 	@PostMapping("/UserProfile.html")
 	public String SaveProfile(@ModelAttribute("name") String nametxt, @ModelAttribute("email") String emailtxt,
 			RedirectAttributes rediatt, HttpServletRequest request, HttpSession session) {
-		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-
-		if (currentUser == null) {
+		if (session.getAttribute("loginUser") == null) {
 			session.removeAttribute("loginUser");
 			return "redirect:/Default.html";
 		}
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
 		String acctxt = currentUser.getAccount();
 		String useridtxt = currentUser.getId();
 
@@ -83,17 +87,17 @@ public class UserInfoController {
 	}
 
 	@GetMapping("/UserList.html")
-	public String UserList(@RequestParam(value = "cUser", required = false) String useridtxt,
+	public String UserList(@RequestParam(value = "cUser", required = false) String cUser,
 			@RequestParam(value = "page", required = false) String pagetxt, Model model, HttpServletResponse response,
 			HttpSession session) {
-		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-
 		// 判斷登入
-		if (currentUser == null) {
+		if (session.getAttribute("loginUser") == null) {
 			session.removeAttribute("loginUser");
 			return "redirect:Default.html";
 		}
-
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
+		String useridtxt = currentUser.getId();
+		
 		// 頁面權限檢查
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
@@ -106,7 +110,7 @@ public class UserInfoController {
 		model.addAttribute("level", IsAdmin);
 		model.addAttribute("ACC", currentUser.getAccount());
 
-		if (useridtxt != null) {
+		if (cUser != null) {
 			// if (!useridtxt.equalsIgnoreCase(currentUser.getId().toString())) {
 			// session.removeAttribute("loginUser");
 			// return "redirect:Default.html";
@@ -119,7 +123,7 @@ public class UserInfoController {
 			}
 
 			Pageable pageable = PageRequest.of(queryIndex, 10);
-			List<UserInfo> userlist = service.getAllUserList(pageable);
+			List<UserInfo> userlist = service.getAllUserList(useridtxt, pageable);
 
 			Integer cnt = Math.toIntExact(service.usercnt());
 			Integer totalpage = cnt / 10;
@@ -146,13 +150,12 @@ public class UserInfoController {
 	@GetMapping("/UserDetail.html")
 	public String UserDetail(@RequestParam(value = "info", required = false) String useridtxt, Model model,
 			HttpSession session) {
-		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-
 		// 判斷登入
-		if (currentUser == null) {
+		if (session.getAttribute("loginUser") == null) {
 			session.removeAttribute("loginUser");
 			return "redirect:Default.html";
 		}
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
 
 		// 頁面權限檢查
 		boolean IsAdmin;
@@ -220,14 +223,13 @@ public class UserInfoController {
 
 	@GetMapping("/UserDetail.html/new")
 	public String newUserDetail(Model model, HttpServletRequest request, HttpSession session) {
-		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-
 		// 判斷登入
-		if (currentUser == null) {
+		if (session.getAttribute("loginUser") == null) {
 			session.removeAttribute("loginUser");
 			return "redirect:Default.html";
 		}
-
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
+		
 		// 頁面權限檢查
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
@@ -293,8 +295,14 @@ public class UserInfoController {
 		if (delList != null) {
 			for (String indextxt : delList) {
 				try {
-					//service.DeleteUserByUserID(indextxt);
 					logger.info("管理者：" + currentUser.getAccount() +  '於' + LocalDateTime.now() + "刪除使用者：" + service.getUserInfoByUserID(indextxt).getAccount());
+					
+					//先清空流水帳再刪除分類
+					ACCservice.DeleteAccountingByUserID(indextxt);
+					Cservice.DeleteCategoryByUserID(indextxt);
+					
+					//刪除使用者
+					//service.DeleteUserByUserID(indextxt);
 				} catch (Exception ex) {
 					rediectatt.addFlashAttribute("errormsg", ex.getMessage());
 				}
