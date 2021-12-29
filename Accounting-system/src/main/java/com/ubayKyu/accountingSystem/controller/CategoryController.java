@@ -135,13 +135,14 @@ public class CategoryController {
 	@GetMapping("/CategoryDetail.html")
 	public String CategoryDetail(@RequestParam(value = "cid", required = false) String cidtxt, Model model,
 			HttpSession session) {
-		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-		String useridtxt = currentUser.getId().toString();
 		// 判斷登入
-		if (currentUser == null) {
+		if (session.getAttribute("loginUser") == null) {
 			session.removeAttribute("loginUser");
 			return "redirect:Default.html";
 		}
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
+		String useridtxt = currentUser.getId();
+		
 		// 頁面權限檢查
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
@@ -151,7 +152,7 @@ public class CategoryController {
 		}
 		model.addAttribute("level", IsAdmin);
 		model.addAttribute("ACC", currentUser.getAccount());
-		model.addAttribute("userid", currentUser.getId().toString());
+		model.addAttribute("userid", useridtxt);
 
 		if (cidtxt != null) {
 			Integer cid = Integer.parseInt(cidtxt);
@@ -201,13 +202,13 @@ public class CategoryController {
 	@GetMapping("/CategoryDetail.html/new")
 	// 新增分類詳細頁顯示
 	public String newCategory(Model model, HttpSession session) {
-		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-
 		// 判斷登入
-		if (currentUser == null) {
+		if (session.getAttribute("loginUser") == null) {
 			session.removeAttribute("loginUser");
 			return "redirect:Default.html";
 		}
+		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
+		
 		// 頁面權限檢查
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
