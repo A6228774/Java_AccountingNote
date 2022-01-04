@@ -70,6 +70,8 @@ public interface AccountingNoteRepository
 	public void createAccounting(String uidtxt, String captiontxt, String remarkstxt, Integer amount, Integer act,
 			LocalDateTime ct, Integer cidtxt);
 
+	@Transactional
+	@Modifying
 	@Query(value = "DELETE FROM AccountingNote WHERE UserID=?1", nativeQuery = true)
 	void DeleteAllAccountingByUserID(String useridtxt);
 

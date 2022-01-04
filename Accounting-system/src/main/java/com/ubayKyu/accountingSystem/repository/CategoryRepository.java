@@ -47,6 +47,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer>,Jpa
 	@Query(value = "SELECT COUNT(Title) FROM Category WHERE Title=?1 AND UserID=?2", nativeQuery = true)
 	Integer IsRepeatTitle(String Title, String userid);
 	
+	@Transactional
+	@Modifying
 	@Query(value = "DELETE FROM Category WHERE UserID=?1", nativeQuery = true)
 	void DeleteAllCategoryByUserID(String indextxt);
 
