@@ -36,8 +36,8 @@ public class HomeController {
 		{
 			model.addAttribute("redirect", "/Login.html");
 		}
-		model.addAttribute("first", accountingnoteSer.firstrecord().toString());
-		model.addAttribute("last", accountingnoteSer.lastrecord().toString());
+		model.addAttribute("first", accountingnoteSer.firstrecord());
+		model.addAttribute("last", accountingnoteSer.lastrecord());
 		model.addAttribute("notecnt", accountingnoteSer.notecnt());
 		model.addAttribute("usercnt", service.usercnt());
 		return "Default.html";
