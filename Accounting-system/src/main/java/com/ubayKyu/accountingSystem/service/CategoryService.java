@@ -73,4 +73,8 @@ public class CategoryService {
 	public void DeleteCategoryByUserID(String indextxt) {
 		repository.DeleteAllCategoryByUserID(indextxt);
 	}
+
+	public Integer getlastCIDBycurrentUser(String uidtxt) {
+		return repository.findLastCategoryByUID(uidtxt);
+	}
 }

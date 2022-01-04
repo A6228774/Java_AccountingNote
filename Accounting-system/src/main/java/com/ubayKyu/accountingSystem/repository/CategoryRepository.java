@@ -49,4 +49,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer>,Jpa
 	
 	@Query(value = "DELETE FROM Category WHERE UserID=?1", nativeQuery = true)
 	void DeleteAllCategoryByUserID(String indextxt);
+
+	@Query(value ="SELECT TOP 1 CategoryID FROM Category WHERE UserID=?1 ORDER BY CreateDate DESC", nativeQuery = true)	
+	Integer findLastCategoryByUID(String uidtxt);
 }

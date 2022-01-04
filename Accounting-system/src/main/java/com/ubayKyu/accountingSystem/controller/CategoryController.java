@@ -56,10 +56,10 @@ public class CategoryController {
 		model.addAttribute("ACC", currentUser.getAccount());
 
 		if (useridtxt != null) {
-			// if (!useridtxt.equalsIgnoreCase(currentUser.getId().toString())) {
-			// session.removeAttribute("loginUser");
-			// return "redirect:Default.html";
-			// }
+			if (!useridtxt.equalsIgnoreCase(currentUser.getId().toString())) {
+				session.removeAttribute("loginUser");
+				return "redirect:Default.html";
+			}
 			model.addAttribute("acctxt", currentUser.getAccount());
 
 			Integer queryIndex = 0;
@@ -142,7 +142,7 @@ public class CategoryController {
 		}
 		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
 		String useridtxt = currentUser.getId();
-		
+
 		// 頁面權限檢查
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
@@ -159,12 +159,16 @@ public class CategoryController {
 			Category cInfo = service.getCategoryByCID(cid);
 
 			if (cInfo != null) {
-				// if (cInfo.getUserid().toString().equalsIgnoreCase(useridtxt)) {
-				// }
-				model.addAttribute("title", cInfo.getTitle());
-				model.addAttribute("remarks", cInfo.getRemarks());
-				model.addAttribute("cid", cidtxt);
-				model.addAttribute("newCat", false);
+				if (cInfo.getUserid().equalsIgnoreCase(useridtxt)) {
+
+					model.addAttribute("title", cInfo.getTitle());
+					model.addAttribute("remarks", cInfo.getRemarks());
+					model.addAttribute("cid", cidtxt);
+					model.addAttribute("newCat", false);
+				} else {
+					session.removeAttribute("loginUser");
+					return "redirect:Default.html";
+				}
 			} else {
 				model.addAttribute("newCat", true);
 				return "redirect:/CategoryDetail.html";
@@ -209,7 +213,7 @@ public class CategoryController {
 			return "redirect:Default.html";
 		}
 		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-		
+
 		// 頁面權限檢查
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
@@ -237,12 +241,12 @@ public class CategoryController {
 			RedirectAttributes rediatt, HttpSession session, HttpServletResponse response) throws Exception {
 		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
 		String uidtxt = currentUser.getId().toString();
-		
-		//檢查重複標題
+
+		// 檢查重複標題
 		Boolean IsRepeat = service.checkRepeat(titletxt, uidtxt);
 		if (IsRepeat == true) {
 			rediatt.addFlashAttribute("titlemsg", "此分類已存在，請使用其他分類名稱");
-			return "redirect:/UserDetail.html/new";
+			return "redirect:/CategoryDetail.html/new";
 		} else {
 			// 新增模式
 			LocalDateTime ct = LocalDateTime.now();
@@ -255,6 +259,7 @@ public class CategoryController {
 				return "redirect:/CategoryDetail.html/new";
 			}
 		}
-		return "redirect:/CategoryList.html?uid=" + uidtxt;
+		Integer newestCategory = service.getlastCIDBycurrentUser(uidtxt);
+		return "redirect:/CategoryDetail.html?cid=" + newestCategory;
 	}
 }
