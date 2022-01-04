@@ -1,5 +1,9 @@
 package com.ubayKyu.accountingSystem.service;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -83,5 +87,31 @@ public class UserInfoService {
 			throw new Exception("Email長度應在100以內");
 		}
 		repository.createUser(acctxt, pwdtxt, nametxt, emailtxt, level, ct);
+	}
+
+	public String getLastUser() {
+		return repository.findLastUser();
+	}
+
+	public void WriteDeleteLog(String deletemsg) throws IOException {
+		File UserDelLog = new File("/UserLog/UserDelete.log");
+		
+		if(!UserDelLog.exists()){
+			UserDelLog.getParentFile().mkdirs();
+        }
+		UserDelLog.createNewFile();
+		
+		FileWriter logger = new FileWriter("UserDelete.log", true);
+		BufferedWriter LogWriter = new BufferedWriter(logger);
+		LogWriter.write(deletemsg);
+		LogWriter.newLine();
+		LogWriter.flush();
+		LogWriter.close();
+		logger.close();
+	}
+
+	public void DeleteUserByUserID(String useridtxt) {
+		repository.DeleteUserByUserID(useridtxt);
+		
 	}
 }

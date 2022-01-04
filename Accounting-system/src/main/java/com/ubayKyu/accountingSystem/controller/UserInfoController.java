@@ -1,5 +1,8 @@
 package com.ubayKyu.accountingSystem.controller;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,8 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +37,7 @@ public class UserInfoController {
 	@Autowired
 	private CategoryService Cservice;
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	// private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	// 個人資訊頁顯示
 	@GetMapping("/UserProfile.html")
@@ -46,6 +47,11 @@ public class UserInfoController {
 			session.removeAttribute("loginUser");
 			response.sendRedirect("/Default.html");
 		} else {
+			UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
+			if (!acctxt.equalsIgnoreCase(currentUser.getAccount())) {
+				session.removeAttribute("loginUser");
+				return "redirect:Default.html";
+			}
 			UserInfo info = service.getUserInfoByAccount(acctxt);
 			String uuidtxt = info.getId();
 
@@ -55,7 +61,7 @@ public class UserInfoController {
 			model.addAttribute("Email", info.getEmail().toString());
 			model.addAttribute("userid", uuidtxt);
 		}
-		
+
 		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
@@ -97,7 +103,7 @@ public class UserInfoController {
 		}
 		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
 		String useridtxt = currentUser.getId();
-		
+
 		// 頁面權限檢查
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
@@ -111,10 +117,10 @@ public class UserInfoController {
 		model.addAttribute("ACC", currentUser.getAccount());
 
 		if (cUser != null) {
-			// if (!useridtxt.equalsIgnoreCase(currentUser.getId().toString())) {
-			// session.removeAttribute("loginUser");
-			// return "redirect:Default.html";
-			// }
+			if (!useridtxt.equalsIgnoreCase(currentUser.getId())) {
+				session.removeAttribute("loginUser");
+				return "redirect:Default.html";
+			}
 
 			Integer queryIndex = 0;
 			if (pagetxt != null) {
@@ -229,7 +235,7 @@ public class UserInfoController {
 			return "redirect:Default.html";
 		}
 		UserInfo currentUser = (UserInfo) session.getAttribute("loginUser");
-		
+
 		// 頁面權限檢查
 		boolean IsAdmin;
 		if (currentUser.getUserLevel() == 0) {
@@ -277,7 +283,8 @@ public class UserInfoController {
 				return "redirect:/UserDetail.html/new";
 			}
 		}
-		return "redirect:/UserList.html?cUser=" + cleveltxt;
+		String newusertxt = service.getLastUser();
+		return "redirect:/UserDetail.html?info=" + newusertxt;
 	}
 
 	@PostMapping("/UserList.html")
@@ -295,14 +302,19 @@ public class UserInfoController {
 		if (delList != null) {
 			for (String indextxt : delList) {
 				try {
-					logger.info("管理者：" + currentUser.getAccount() +  '於' + LocalDateTime.now() + "刪除使用者：" + service.getUserInfoByUserID(indextxt).getAccount());
-					
-					//先清空流水帳再刪除分類
+					// 刪除使用者log
+					try {
+						service.WriteDeleteLog("管理者：" + currentUser.getAccount() + '於' + LocalDateTime.now() + " 刪除使用者："
+								+ service.getUserInfoByUserID(indextxt).getAccount());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					// 先清空流水帳再刪除分類
 					ACCservice.DeleteAccountingByUserID(indextxt);
 					Cservice.DeleteCategoryByUserID(indextxt);
-					
-					//刪除使用者
-					//service.DeleteUserByUserID(indextxt);
+
+					// 最後刪除使用者
+					service.DeleteUserByUserID(indextxt);
 				} catch (Exception ex) {
 					rediectatt.addFlashAttribute("errormsg", ex.getMessage());
 				}

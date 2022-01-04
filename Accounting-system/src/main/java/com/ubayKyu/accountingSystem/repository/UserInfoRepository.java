@@ -49,5 +49,14 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, UUID> {
 	@Transactional
 	@Modifying
 	@Query(value = "INSERT INTO UserInfo (Account, PWD, Name, Email, UserLevel, CreateDate) VALUES (?1, ?2, ?3, ?4, ?5, ?6)", nativeQuery = true)
-	public void createUser(String acctxt, String pwdtxt, String nametxt, String emailtxt, Integer level, LocalDateTime ct);
+	public void createUser(String acctxt, String pwdtxt, String nametxt, String emailtxt, Integer level,
+			LocalDateTime ct);
+
+	@Query(value = "SELECT TOP 1 ID FROM UserInfo ORDER BY CreateDate DESC", nativeQuery = true)
+	String findLastUser();
+	
+	@Transactional
+	@Modifying
+	@Query(value="DELETE FROM UserInfo WHERE ID=?1", nativeQuery = true)
+	public void DeleteUserByUserID(String useridtxt);
 }
