@@ -29,7 +29,7 @@ public class AccountingNote {
 	@Column(name = "CategoryID", nullable=true, unique=false, columnDefinition = "int")
 	public Integer categoryid;
 	
-	public String title;
+	public String ctitle;
 		
 	public Integer getId() {
 		return id;
@@ -78,11 +78,5 @@ public class AccountingNote {
 	}
 	public void setCategoryid(Integer categoryid) {
 		this.categoryid = categoryid;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
 	}
 }

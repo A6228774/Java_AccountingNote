@@ -46,7 +46,7 @@ public class AccountingNoteService {
 	}
 
 	public void DeleteAccountingByID(Integer accountingid) {
-		repository.deleteById(accountingid);
+		repository.DeleteAccountingByID(accountingid);
 		return;
 	}
 
@@ -95,5 +95,9 @@ public class AccountingNoteService {
 	public void DeleteAccountingByUserID(String useridtxt) {
 		repository.DeleteAllAccountingByUserID(useridtxt);
 		
+	}
+
+	public Integer getLastAccounting(String uidtxt) {
+		return repository.findLastAccountingNote(uidtxt);
 	}
 }

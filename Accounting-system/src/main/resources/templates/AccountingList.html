@@ -66,7 +66,8 @@
 								總金額小計
 								<label th:text="${totalamount} + '元'"></label>&nbsp;
 								本月小計
-								<label th:text="${monthly} + '元'"></label>
+								<label th:text="${monthly} + '元'"></label><br>
+								<span th:text="${msg}" style="color: red"></span>
 							</div>
 						</div>
 						<div class="card-body">
@@ -97,11 +98,11 @@
 											<tr th:if="${accounting.empty}">
 												<td colspan="7">沒有任何流水帳</td>
 											</tr>
-											<tr th:each="a, row : ${accounting}">
+											<tr th:each="a : ${accounting}">
 												<td><input type="checkbox" class="cbx"
 													th:value="${a.id}" name="accountingID"></td>
 												<td><span th:text="${a.createDate}"></span></td>
-												<td><span th:text="${a.Title}"></span></td>
+												<td><span th:text="${a.ctitle}"></span></td>
 												<td><span th:text="${a.actType} == 0 ? '收入':'支出'"></span></td>
 												<td><span th:text="${a.amount}"
 													th:style="${a.actType} == 0 ? 'color: black;':'color: red'"></span></td>

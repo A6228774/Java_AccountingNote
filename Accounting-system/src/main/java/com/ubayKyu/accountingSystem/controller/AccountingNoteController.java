@@ -56,10 +56,10 @@ public class AccountingNoteController {
 		model.addAttribute("level", IsAdmin);
 
 		if (useridtxt != null) {
-			// if (!useridtxt.equalsIgnoreCase(currentUser.getId().toString())) {
-			// session.removeAttribute("loginUser");
-			// return "redirect:Default.html";
-			// }
+			if (!useridtxt.equalsIgnoreCase(currentUser.getId().toString())) {
+				session.removeAttribute("loginUser");
+				return "redirect:Default.html";
+			}
 			model.addAttribute("ACC", currentUser.getAccount());
 
 			// 金額小計
@@ -147,6 +147,7 @@ public class AccountingNoteController {
 		} else {
 			rediectatt.addFlashAttribute("errormsg", "未勾選流水帳");
 		}
+		rediectatt.addFlashAttribute("msg", "刪除成功");
 		return "redirect:/AccountingList.html?uid=" + useridtxt;
 	}
 
@@ -178,18 +179,22 @@ public class AccountingNoteController {
 			AccountingNote aInfo = service.getAccountingByID(accountingid);
 
 			if (aInfo != null) {
-				// if (aInfo.getUserid().toString().equalsIgnoreCase(useridtxt)) {
-				// }
-				List<Category> category = Catservice.getCategoryDLLByUserID(useridtxt);
+				if (aInfo.getUserid().equalsIgnoreCase(useridtxt)) {
 
-				model.addAttribute("aid", aInfo.getId().toString());
-				model.addAttribute("act", aInfo.getActType());
-				model.addAttribute("catDDL", category);
-				model.addAttribute("amount", aInfo.getAmount());
-				model.addAttribute("caption", aInfo.getCaption());
-				model.addAttribute("remarks", aInfo.getRemarks());
-				model.addAttribute("cid", aInfo.getCategoryid());
-				model.addAttribute("newAccounting", false);
+					List<Category> category = Catservice.getCategoryDLLByUserID(useridtxt);
+
+					model.addAttribute("aid", aInfo.getId().toString());
+					model.addAttribute("act", aInfo.getActType());
+					model.addAttribute("catDDL", category);
+					model.addAttribute("amount", aInfo.getAmount());
+					model.addAttribute("caption", aInfo.getCaption());
+					model.addAttribute("remarks", aInfo.getRemarks());
+					model.addAttribute("cid", aInfo.getCategoryid());
+					model.addAttribute("newAccounting", false);
+				} else {
+					session.removeAttribute("loginUser");
+					return "redirect:Default.html";
+				}
 			} else {
 				model.addAttribute("newAccounting", true);
 				return "redirect:/AccountingDetail.html";
@@ -290,6 +295,7 @@ public class AccountingNoteController {
 			rediatt.addFlashAttribute("errormsg", ex.getLocalizedMessage());
 			return "redirect:/AccountingDetail.html/new";
 		}
-		return "redirect:/AccountingList.html?uid=" + uidtxt;
+		Integer newestNote = service.getLastAccounting(uidtxt);
+		return "redirect:/AccountingDetail.html?id=" + newestNote;
 	}
 }

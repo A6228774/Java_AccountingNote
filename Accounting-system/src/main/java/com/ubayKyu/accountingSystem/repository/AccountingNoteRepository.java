@@ -33,10 +33,8 @@ public interface AccountingNoteRepository
 	@Query(value = "SELECT * from AccountingNote WHERE UserID=?1", nativeQuery = true)
 	List<AccountingNote> findByUserIDSQL(String userid, Pageable pageable);
 
-	@Query(value = "SELECT AccountingNote.[ID], AccountingNote.[UserID], AccountingNote.[Caption], AccountingNote.[Remarks], AccountingNote.[Amount], AccountingNote.[ActType],"
-			+ "AccountingNote.[CreateDate], AccountingNote.[CategoryID], Category.[Title]"
-			+ "FROM [AccountingNote] LEFT JOIN [Category]"
-			+ "ON AccountingNote.[CategoryID] = Category.[CategoryID] WHERE AccountingNote.[UserID]=?1", nativeQuery = true)
+	@Query(value = "SELECT AccountingNote.* , Category.[Title] as ctitle FROM [AccountingNote] LEFT JOIN [Category] ON AccountingNote.[CategoryID] = Category.[CategoryID]"
+			+ " WHERE AccountingNote.[UserID]=?1", nativeQuery = true)
 	List<AccountingNote> findNoteByUserIDSQL(String userid, Pageable pageable);
 
 	@Query(value = "SELECT COUNT(*) as cnt from AccountingNote WHERE UserID=?1", nativeQuery = true)
@@ -57,7 +55,7 @@ public interface AccountingNoteRepository
 	@Query(value = "SELECT SUM(Amount) as Expentiture FROM AccountingNote WHERE UserID=?1 AND ActType=?2 AND CreateDate BETWEEN ?3 AND ?4", nativeQuery = true)
 	BigDecimal findMonthlyExpentitureByUIDSQL(String userid, Integer act, LocalDate start, LocalDate end);
 
-	@Query(value = "SELECT * FROM AccountingNote WHERE ID=?1", nativeQuery = true)
+	@Query(value = "SELECT AccountingNote.* , Category.[Title] as ctitle FROM [AccountingNote] LEFT JOIN [Category] ON AccountingNote.[CategoryID] = Category.[CategoryID] WHERE ID=?1", nativeQuery = true)
 	AccountingNote findAccountingByID(Integer accountingid);
 
 	@Transactional
@@ -74,4 +72,7 @@ public interface AccountingNoteRepository
 
 	@Query(value = "DELETE FROM AccountingNote WHERE UserID=?1", nativeQuery = true)
 	void DeleteAllAccountingByUserID(String useridtxt);
+
+	@Query(value="SELECT TOP 1 ID FROM AccountingNote WHERE UserID=?1 ORDER BY CreateDate DESC", nativeQuery = true)
+	Integer findLastAccountingNote(String uidtxt);
 }
